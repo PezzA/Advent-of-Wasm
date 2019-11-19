@@ -44,11 +44,6 @@ func (d *JsDoc) SetCanvasSize(x, y int) {
 	canvasHeight = float64(y)
 }
 
-// StartAnimLoop starts the requestAnimationFrame loop.
-func (d *JsDoc) StartAnimLoop() {
-	js.Global().Call("requestAnimationFrame", renderFrameEvt)
-}
-
 // DrawImage will draw an image to specified coordinates, wants sprite offsets by default
 func (d *JsDoc) DrawImage(img js.Value, sX, sY, sW, sH, dX, dY, dW, dH int) {
 	d.TwoDCtx.Call("drawImage", img, sX, sY, sW, sH, dX, dY, dW, dH)

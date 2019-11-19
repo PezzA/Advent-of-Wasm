@@ -34,20 +34,24 @@ func NewJsDoc(canvasName string) JsDoc {
 	return jsDoc
 }
 
-// InitEvents will bind the click, mousemove and frame events
-func (d *JsDoc) InitEvents(click func(x, y int), mouseMove func(x, y int) frame func(now float64)) {
-
-	clickCallback = click
+// StartAnimLoop starts the requestAnimationFrame loop.
+func (d *JsDoc) StartAnimLoop(frame func(now float64)) {
 	frameCallback = frame
+	renderFrameEvt = js.FuncOf(renderFrame)
+	js.Global().Call("requestAnimationFrame", renderFrameEvt)
+}
+
+// InitEvents will bind the click, mousemove
+func (d *JsDoc) InitEvents(click func(x, y int), mouseMove func(x, y int)) {
+	clickCallback = click
+
 	mouseMoveCallback = mouseMove
 
-	mouseMoveEvt = js.FuncOf(mouseMove)
+	mouseMoveEvt = js.FuncOf(mouseMoveHandler)
 	d.document.Call("addEventListener", "mousemove", mouseMoveEvt)
 
 	canvasClickEvt = js.FuncOf(canvasClick)
 	d.canvasElem.Call("addEventListener", "click", canvasClickEvt)
-
-	renderFrameEvt = js.FuncOf(renderFrame)
 }
 
 // ReleaseEvents removes the event listeners.
@@ -68,27 +72,27 @@ func renderFrame(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
-func mouseMove(this js.Value, args []js.Value) interface{} {
+func mouseMoveHandler(this js.Value, args []js.Value) interface{} {
 	e := args[0]
 
-	MousePos[0] = e.Get("clientX").Float() - offSetLeft
-	MousePos[1] = e.Get("clientY").Float() - offSetTop
+	mousePos[0] = e.Get("clientX").Float() - offSetLeft
+	mousePos[1] = e.Get("clientY").Float() - offSetTop
 
-	if MousePos[0] < 0 {
-		MousePos[0] = 0
+	if mousePos[0] < 0 {
+		mousePos[0] = 0
 	}
-	if MousePos[1] < 0 {
-		MousePos[1] = 0
-	}
-
-	if MousePos[0] > canvasWidth {
-		MousePos[0] = canvasWidth
+	if mousePos[1] < 0 {
+		mousePos[1] = 0
 	}
 
-	if MousePos[1] > canvasHeight {
-		MousePos[1] = canvasHeight
+	if mousePos[0] > canvasWidth {
+		mousePos[0] = canvasWidth
 	}
 
-	mouseMoveCallback()
+	if mousePos[1] > canvasHeight {
+		mousePos[1] = canvasHeight
+	}
+
+	mouseMoveCallback(int(mousePos[0]), int(mousePos[1]))
 	return nil
 }
