@@ -12,7 +12,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            z-index:-1;
+            z-index: -1;
         }
 
         body {
@@ -62,7 +62,6 @@
             color: #ffff66;
         }
 
-        /* glow effect taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_glowing_text */
         .star {
             color: #333333;
             font-weight: bold;
@@ -82,6 +81,8 @@
         <h1>Advent of Code</h1>
         <div class="flavour">
             <pre style="display: inline-block; text-align: left;">
+go obligatorySnowEffect(<input type="text" id="flakes" value="250"/>);
+
 joke, err := GetJoke([]string {
     "'Twas the month before Christmas, when all through the house",
     "Not a creature was stirring, not even a mouse;"
@@ -94,7 +95,7 @@ if err != nil {
     log.fatal(err)
 }
 
-<- greatIdeas
+<- ideas
             </pre>
         </div>
     </div>
@@ -277,13 +278,12 @@ if err != nil {
     <script>
         const go = new Go();
         let mod, inst;
-      
-            WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(async (result) => {
-                mod = result.module;
-                inst = result.instance;
-                await go.run(inst)
-            });
-       
+
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(async (result) => {
+            mod = result.module;
+            inst = result.instance;
+            await go.run(inst)
+        });    
     </script>
 </body>
 
