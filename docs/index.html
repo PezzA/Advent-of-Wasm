@@ -275,13 +275,13 @@ if err != nil {
 
     <script src="wasm_exec.js"></script>
     <script>
-        const go = new Go();
-        let mod, inst;
+        const snowfield = new Go();
+        let snowMod, snowInst;
       
-            WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(async (result) => {
-                mod = result.module;
-                inst = result.instance;
-                await go.run(inst)
+            WebAssembly.instantiateStreaming(fetch("main.wasm"), snowfield.importObject).then(async (result) => {
+                snowMod = result.module;
+                snowInst = result.instance;
+                await snowfield.run(snowInst)
             });
        
     </script>
