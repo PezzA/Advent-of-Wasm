@@ -17,7 +17,7 @@ var mouseMoveEvt, renderFrameEvt, canvasClickEvt js.Func
 // edges of the canvas
 var mousePos [2]float64
 
-// NewJsDoc returns a new JsDoc initted with assets and events.
+// NewJsDoc returns a new JsDoc.
 func NewJsDoc(canvasName string) JsDoc {
 	doc := js.Global().Get("document")
 	canvas := doc.Call("getElementById", canvasName)

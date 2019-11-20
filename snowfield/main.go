@@ -15,27 +15,19 @@ type flake struct {
 
 var doc wasm.JsDoc
 var flakes []flake
-var tick float64 = 1000 / 60
-var currentTick float64
-var time float64
 
 var flakeCount = 250
-
 var canvasDrawWidth, canvasDrawHeight = 800, 600
 
-func main() {
-	done := make(chan bool, 0)
+func createFlakes(flakeCount int) []flake {
+	flakeArray := make([]flake, flakeCount)
 
-	doc = wasm.NewJsDoc("canv")
-
-	flakes = make([]flake, flakeCount)
-
-	for index := range flakes {
-		flakes[index].x = rand.Intn(canvasDrawWidth)
-		flakes[index].y = rand.Intn(canvasDrawHeight)
+	for index := range flakeArray {
+		flakeArray[index].x = rand.Intn(canvasDrawWidth)
+		flakeArray[index].y = rand.Intn(canvasDrawHeight)
 
 		speed := rand.Intn(4) + 1
-		flakes[index].speed = speed
+		flakeArray[index].speed = speed
 
 		style := "#000000"
 
@@ -52,25 +44,26 @@ func main() {
 			style = "#ffffff"
 		}
 
-		flakes[index].style = style
+		flakeArray[index].style = style
 	}
 
+	return flakeArray
+}
+
+func main() {
+	done := make(chan bool, 0)
+
+	doc = wasm.NewJsDoc("canv")
+
+	flakes = createFlakes(250)
+
 	doc.StartAnimLoop(frame)
+
 	<-done
 }
 
 func frame(now float64) {
-	delta := now - time
-	time = now
-	currentTick += delta
-
-	if currentTick < tick {
-		return
-	}
-
-	currentTick = 0
 	doc.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
-
 	for i := range flakes {
 		doc.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed, flakes[i].style)
 		flakes[i].y += flakes[i].speed
