@@ -26,22 +26,22 @@ func createFlakes(flakeCount int) []flake {
 		flakeArray[index].x = rand.Intn(canvasDrawWidth)
 		flakeArray[index].y = rand.Intn(canvasDrawHeight)
 
-		speed := rand.Intn(4) + 1
+		speed := rand.Intn(5) + 1
 		flakeArray[index].speed = speed
 
 		style := "#000000"
 
 		switch speed {
 		case 1:
-			style = "#333333"
-		case 2:
 			style = "#777777"
+		case 2:
+			style = "#999999"
 		case 3:
 			style = "#aaaaaa"
 		case 4:
-			style = "#cccccc"
+			style = "#bbbbbb"
 		case 5:
-			style = "#ffffff"
+			style = "#eeeeee"
 		}
 
 		flakeArray[index].style = style
