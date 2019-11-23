@@ -23,6 +23,24 @@ var flakes []flake
 
 var canvasDrawWidth, canvasDrawHeight = 800, 600
 
+func main() {
+	done := make(chan bool, 0)
+
+	doc = wasm.GetJSDocument()
+	canvas = doc.GetCanvas("canv")
+
+	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
+
+	flakeCount := 250
+	flakeCount, _ = strconv.Atoi(doc.GetElementInnerHTML("flakecount-value"))
+
+	flakes = createFlakes(flakeCount)
+
+	doc.StartAnimLoop(frame)
+
+	<-done
+}
+
 func createFlakes(flakeCount int) []flake {
 	flakeArray := make([]flake, flakeCount)
 
@@ -52,26 +70,6 @@ func createFlakes(flakeCount int) []flake {
 	}
 
 	return flakeArray
-}
-
-func main() {
-	done := make(chan bool, 0)
-
-	doc = wasm.GetJSDocument()
-	canvas = doc.GetCanvas("canv")
-
-	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
-
-	flakeCount := 250
-
-	flakeCount, _ = strconv.Atoi(doc.GetElementInnerHTML("flakecount-value"))
-
-	flakes = createFlakes(flakeCount)
-
-	doc.StartAnimLoop(frame)
-	doc.Resize(resize)
-
-	<-done
 }
 
 func countHandlerfunc(this js.Value, args []js.Value) interface{} {
@@ -106,11 +104,15 @@ func resize() {
 	fmt.Println("resized!")
 }
 
+var currentTime float64
+
 func frame(now float64) {
+	delta := now - currentTime
+	currentTime = now
 	canvas.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
 	for i := range flakes {
 		canvas.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed, flakes[i].style)
-		flakes[i].y += flakes[i].speed
+		flakes[i].y += int(float64(flakes[i].speed) * (delta / 20))
 		if flakes[i].y > canvasDrawHeight {
 			flakes[i].y -= canvasDrawHeight
 		}
