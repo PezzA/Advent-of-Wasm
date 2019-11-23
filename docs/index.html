@@ -82,7 +82,7 @@
         <h1>Advent of Code</h1>
         <div class="flavour">
             <pre style="display: inline-block; text-align: left;">
-go obligatorySnowEffect(<input type="text" id="flakes" value="250"/>);
+go obligatorySnowEffect(<label>flakes:</label><input id="flakecount" type="range" min="10" max="2000" value="250"> <span id="flakecount-value">250</span>)
 
 joke, err := GetJoke([]string {
     "'Twas the month before Christmas, when all through the house",

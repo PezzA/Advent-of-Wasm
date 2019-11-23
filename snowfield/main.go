@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
+	"strconv"
+	"syscall/js"
 
-	"github.com/pezza/advent-of-wasm/wasm"
+	"github.com/pezza/wasm"
 )
 
 type flake struct {
@@ -13,10 +16,11 @@ type flake struct {
 	style string
 }
 
-var doc wasm.JsDoc
+var doc wasm.DomDocument
+var canvas wasm.Canvas
+
 var flakes []flake
 
-var flakeCount = 250
 var canvasDrawWidth, canvasDrawHeight = 800, 600
 
 func createFlakes(flakeCount int) []flake {
@@ -53,19 +57,59 @@ func createFlakes(flakeCount int) []flake {
 func main() {
 	done := make(chan bool, 0)
 
-	doc = wasm.NewJsDoc("canv")
+	doc = wasm.GetJSDocument()
+	canvas = doc.GetCanvas("canv")
 
-	flakes = createFlakes(250)
+	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
+
+	flakeCount := 250
+
+	flakeCount, _ = strconv.Atoi(doc.GetElementInnerHTML("flakecount-value"))
+
+	flakes = createFlakes(flakeCount)
 
 	doc.StartAnimLoop(frame)
+	doc.Resize(resize)
 
 	<-done
 }
 
+func countHandlerfunc(this js.Value, args []js.Value) interface{} {
+	newFlakeCount, err := strconv.Atoi(this.Get("value").String())
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	flakes = adjustFlakes(newFlakeCount, flakes)
+
+	doc.SetElementInnerHTML("flakecount-value", strconv.Itoa(newFlakeCount))
+
+	return nil
+}
+
+func adjustFlakes(newCount int, current []flake) []flake {
+	if newCount == len(current) {
+		return current
+	}
+
+	if newCount > len(current) {
+		newflakes := createFlakes(newCount - len(current))
+		return append(current, newflakes...)
+	}
+
+	return flakes[0:newCount]
+}
+
+func resize() {
+	fmt.Println("resized!")
+}
+
 func frame(now float64) {
-	doc.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
+	canvas.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
 	for i := range flakes {
-		doc.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed, flakes[i].style)
+		canvas.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed, flakes[i].style)
 		flakes[i].y += flakes[i].speed
 		if flakes[i].y > canvasDrawHeight {
 			flakes[i].y -= canvasDrawHeight
