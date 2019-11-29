@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"strconv"
 	"syscall/js"
+	"time"
 
 	"github.com/pezza/wasm"
 )
@@ -23,6 +24,8 @@ var flakes []flake
 
 var canvasDrawWidth, canvasDrawHeight = 800, 600
 
+var updates chan []string
+
 func main() {
 	done := make(chan bool, 0)
 
@@ -36,6 +39,7 @@ func main() {
 
 	flakes = createFlakes(flakeCount)
 
+	updates = make(chan []string, 1000)
 	doc.StartAnimLoop(frame)
 
 	<-done
@@ -104,6 +108,12 @@ func resize() {
 	fmt.Println("resized!")
 }
 
+type partResult struct {
+	answered bool
+	result   string
+	time     time.Duration
+}
+
 var currentTime float64
 
 func frame(now float64) {
@@ -116,5 +126,11 @@ func frame(now float64) {
 		if flakes[i].y > canvasDrawHeight {
 			flakes[i].y -= canvasDrawHeight
 		}
+	}
+
+	select {
+	case data := <-updates:
+		fmt.Println(data)
+	default:
 	}
 }
