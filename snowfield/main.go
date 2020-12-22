@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"github.com/pezza/advent-of-wasm/wasm"
 	"math/rand"
 	"strconv"
 	"syscall/js"
-	"time"
-
-	"github.com/pezza/wasm"
+	"fmt"
 )
 
 type flake struct {
@@ -17,58 +15,39 @@ type flake struct {
 	style string
 }
 
-var doc wasm.DomDocument
-var canvas wasm.Canvas
-
+var doc wasm.JsDoc
 var flakes []flake
 
 var canvasDrawWidth, canvasDrawHeight = 800, 600
-
-var updates chan []string
-
-func main() {
-	done := make(chan bool, 0)
-
-	doc = wasm.GetJSDocument()
-	canvas = doc.GetCanvas("canv")
-
-	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
-
-	flakeCount := 250
-	flakeCount, _ = strconv.Atoi(doc.GetElementInnerHTML("flakecount-value"))
-
-	flakes = createFlakes(flakeCount)
-
-	updates = make(chan []string, 1000)
-	doc.StartAnimLoop(frame)
-
-	<-done
-}
 
 func createFlakes(flakeCount int) []flake {
 	flakeArray := make([]flake, flakeCount)
 
 	for index := range flakeArray {
 		flakeArray[index].x = rand.Intn(canvasDrawWidth)
-		flakeArray[index].y = rand.Intn(canvasDrawHeight)
+		flakeArray[index].y = rand.Intn(canvasDrawHeight) - canvasDrawHeight
 
-		speed := rand.Intn(5) + 1
+		speed := rand.Intn(5) +2
 		flakeArray[index].speed = speed
 
-		style := "#000000"
+		style := "#666666" // white
 
 		switch speed {
 		case 1:
-			style = "#777777"
+			style = "#00FF00" // green
 		case 2:
-			style = "#999999"
+			style = "#888888" //blue
 		case 3:
-			style = "#aaaaaa"
+			style = "#BBBBBB" //yellow
 		case 4:
-			style = "#bbbbbb"
+			style = "#DDDDDD" // cyan
 		case 5:
-			style = "#eeeeee"
+			style = "#EEEEEE" // magenta
+		case 6:
+			style = "#FFFFFF" // red
 		}
+
+
 
 		flakeArray[index].style = style
 	}
@@ -76,6 +55,37 @@ func createFlakes(flakeCount int) []flake {
 	return flakeArray
 }
 
+func main() {
+	done := make(chan bool, 0)
+
+	doc = wasm.NewJsDoc("canv")
+
+	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
+
+	flakeCount := 1000
+
+	flakes = createFlakes(flakeCount)
+
+	doc.StartAnimLoop(frame)
+
+	<-done
+}
+
+var currentTime float64
+
+func frame(now float64) {
+
+	delta := now - currentTime
+	currentTime = now
+	doc.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
+	for i := range flakes {
+		doc.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed-1, flakes[i].speed-1, flakes[i].style)
+		flakes[i].y += int(float64(flakes[i].speed) * (delta / 20))
+		if flakes[i].y > canvasDrawHeight {
+			flakes[i].y -= canvasDrawHeight
+		}
+	}
+}
 func countHandlerfunc(this js.Value, args []js.Value) interface{} {
 	newFlakeCount, err := strconv.Atoi(this.Get("value").String())
 
@@ -102,35 +112,4 @@ func adjustFlakes(newCount int, current []flake) []flake {
 	}
 
 	return flakes[0:newCount]
-}
-
-func resize() {
-	fmt.Println("resized!")
-}
-
-type partResult struct {
-	answered bool
-	result   string
-	time     time.Duration
-}
-
-var currentTime float64
-
-func frame(now float64) {
-	delta := now - currentTime
-	currentTime = now
-	canvas.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
-	for i := range flakes {
-		canvas.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed, flakes[i].style)
-		flakes[i].y += int(float64(flakes[i].speed) * (delta / 20))
-		if flakes[i].y > canvasDrawHeight {
-			flakes[i].y -= canvasDrawHeight
-		}
-	}
-
-	select {
-	case data := <-updates:
-		fmt.Println(data)
-	default:
-	}
 }

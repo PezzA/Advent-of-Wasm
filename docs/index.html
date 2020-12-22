@@ -1,10 +1,8 @@
 <html>
-
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Advent of Wasm</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Source+Code+Pro:300&display=swap" rel="stylesheet">
-
     <style>
         #canv {
             position: fixed;
@@ -16,28 +14,36 @@
         }
 
         body {
-            font-family: Source Code Pro;
-            font-size: 24px;
+            font-family: "Source Code Pro", monospace;
+            font-size: 14pt;
             background-color: #cccccc;
+            margin:0;
+            padding:0;
         }
 
         .flavour {
-            color: #33AA00;
             text-align: left;
             margin: auto;
-            text-align: center;
-
+            background: rgba(15, 15, 35, 0.8);
+            padding: 10px 10px 10px 10px;
+            width: 40%;
+            min-width: 700px;
+            border: 1px solid black;
+            border-radius: 20px;
         }
 
         .flavour pre {
+            color: #009900;
+            display: inline-block;
             text-align: left;
         }
 
+
         h1 {
-            font-family: Lobster;
+            font-family: Lobster,sans-serif;
             font-size: 72px;
-            color: #cccccc;
-            text-shadow: 0 0 20px #FFF;
+            color: #ffff66;
+            text-shadow: 0 0 50px #FFFFFF;
         }
 
         div {
@@ -45,9 +51,9 @@
         }
 
         table {
-            margin: 0 auto;
+           width: 100%;
             color: #33AA00;
-            font-size: 24px;
+            font-size: 18px;
         }
 
         td {
@@ -64,55 +70,90 @@
         }
 
         .star {
-            color: #333333;
+            color: #777777;
             font-weight: bold;
+            font-size:20px;
         }
 
         .star.completed {
             color: #ffff66;
             font-weight: bolder;
             text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffff66, 0 0 40px #ffff66;
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body>
-    <canvas id="canv" width="800" height="600"></canvas>
-    <div>
-        <h1>Advent of Code</h1>
-        <div class="flavour">
-            <pre style="display: inline-block; text-align: left;">
-go obligatorySnowEffect(<label>flakes:</label><input id="flakecount" type="range" min="10" max="2000" value="250"> <span id="flakecount-value">250</span>)
+<canvas id="canv" width="800" height="600"></canvas>
+<div>
+    <h1>Advent of Code</h1>
+    <div class="flavour">
+            <pre>
+go obligatorySnowEffect(<label>flakes:</label><input id="flakecount" type="range" min="10" max="5000"
+                                                     value="1000"> <span id="flakecount-value">1000</span>)
 
 joke, err := GetJoke([]string {
     "'Twas the month before Christmas, when all through the house",
     "Not a creature was stirring, not even a mouse;"
     "",
     "Except up-far-to-early <a href="https://github.com/PezzA">John</a>, coding at 5am,",
-    "Bashing out solutions in <a href="https://golang.org/">go</a>, using embedded <a href="https://webassembly.org/">wa-sem'</a>.",
+    "Bashing out <a href="https://github.com/PezzA/advent-of-code">solutions</a> in <a href="https://golang.org/">go</a>, using embedded <a href="https://github.com/PezzA/advent-of-wasm">wa-sem'</a>.",
 })
 
-if err != nil { 
+if err != nil {
     log.fatal(err)
 }
 
 <- ideas
             </pre>
-        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>2015</td>
+                    <td>2016</td>
+                    <td>2017</td>
+                    <td>2018</td>
+                    <td>2019</td>
+                    <td>2020</td>
+                </tr>
+            </thead>
+            <tbody id="starBody">
+
+            </tbody>
+        </table>
     </div>
 
-    <script src="wasm_exec.js"></script>
-    <script>
-        const snowfield = new Go();
-        let snowMod, snowInst;
-      
-            WebAssembly.instantiateStreaming(fetch("snowfield.wasm"), snowfield.importObject).then(async (result) => {
-                snowMod = result.module;
-                snowInst = result.instance;
-                await snowfield.run(snowInst)
-            });
-       
-    </script>
+
+</div>
+
+<script src="wasm_exec.js"></script>
+<script>
+    const snowfield = new Go();
+    let snowMod, snowInst;
+
+    WebAssembly.instantiateStreaming(fetch("snowfield.wasm"), snowfield.importObject).then(async (result) => {
+        snowMod = result.module;
+        snowInst = result.instance;
+        await snowfield.run(snowInst)
+    });
+
+    const aoc = new Go();
+    let aocMod, aocInst;
+
+    WebAssembly.instantiateStreaming(fetch("aoc.wasm"), aoc.importObject).then(async (result) => {
+        aocMod = result.module;
+        aocInst = result.instance;
+        await aoc.run(aocInst)
+    });
+</script>
+<script>
+    function doPuzzle( day, year) {
+        runPuzzle( day, year)
+        return false;
+    }
+</script>
 </body>
 
 </html>
