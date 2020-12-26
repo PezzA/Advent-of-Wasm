@@ -6,6 +6,7 @@ import (
 	"github.com/pezza/advent-of-wasm/wasm"
 	"strings"
 	"syscall/js"
+	"time"
 )
 
 func getStarData() string {
@@ -18,7 +19,7 @@ func getStarData() string {
 			_, err := puzzles.GetPuzzle(day, year)
 
 			if err == nil {
-				sb.WriteString(fmt.Sprintf("<span class=\"star completed\">*</span><span class=\"star completed\">*</span>&nbsp<a href=\"#\" onClick=\"runPuzzle(%d,%d);\">Run</a>", day, year))
+				sb.WriteString(fmt.Sprintf("<span class=\"star completed\">*</span><span class=\"star completed\">*</span>&nbsp<button onClick=\"runPuzzle(%d,%d);\">Run</button>", day, year))
 			}else{
 				sb.WriteString("<span class=\"star\">*</span><span class=\"star\">*</span>")
 			}
@@ -38,8 +39,15 @@ func runPuzzle(this js.Value, p []js.Value) interface{} {
 		fmt.Println(err)
 	}
 
-	fmt.Println(puzzle.PartOne(puzzle.PuzzleInput(), nil))
-	fmt.Println(puzzle.PartTwo(puzzle.PuzzleInput(), nil))
+	year, day, name := puzzle.Describe()
+	fmt.Printf("Running puzzle: -- %d: Day %d - %v\n", year, day, name)
+	start := time.Now()
+	res := puzzle.PartOne(puzzle.PuzzleInput(), nil)
+	fmt.Printf("Part 1 => %s. Complete in %d milliseconds\n", res ,time.Since(start).Milliseconds())
+
+	start = time.Now()
+	res = puzzle.PartTwo(puzzle.PuzzleInput(), nil)
+	fmt.Printf("Part 2 => %s. Complete in %d milliseconds\n", res ,time.Since(start).Milliseconds())
 
 	return js.ValueOf(0)
 }
@@ -51,7 +59,6 @@ func main (){
 
 	doc.SetElementInnerHTML("starBody", getStarData())
 
-	fmt.Println("setting run puzzle")
 	doc.Document.Set("runPuzzle", js.FuncOf(runPuzzle))
 
 	<-done

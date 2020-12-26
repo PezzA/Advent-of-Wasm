@@ -36,8 +36,6 @@ func main() {
 	flakeCount := 1000
 	flakes = createFlakes(flakeCount)
 
-
-	fmt.Println(canvasDrawWidth, canvasDrawHeight)
 	canvas = doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight)
 
 	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))

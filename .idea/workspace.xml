@@ -2,17 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wasm/window.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/aoc.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/bindings.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/wasm.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
