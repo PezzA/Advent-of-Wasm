@@ -33,7 +33,7 @@ func main() {
 	canvasDrawWidth = canvasDrawWidth / 3
 	canvasDrawHeight = canvasDrawHeight / 3
 
-	flakeCount := 1000
+	flakeCount := 500
 	flakes = createFlakes(flakeCount)
 
 	canvas = doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight)
