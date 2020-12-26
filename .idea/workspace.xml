@@ -2,19 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wasm/bindings.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wasm/wasm.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aow.code-workspace" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/buildwasm.bat" beforeDir="false" afterPath="$PROJECT_DIR$/buildwasm.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wasm/window.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/aoc.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/main.wasm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/wasm_exec.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/wasm_exec.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/snowfield/aoc.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/bindings.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/wasm.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +42,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/buildwasm.bat" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -59,14 +57,23 @@
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\docs" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\wasm" />
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\cmd" />
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm" />
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\aoc" />
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\snowfield" />
-      <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\wasm" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Batch.BuildWasn">
+    <configuration name="BuildWasn" type="BatchConfigurationType" factoryName="Batch">
+      <module name="advent-of-wasm" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/buildwasm.bat" />
+      <option name="PARAMETERS" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="advent-of-wasm" />
       <working_directory value="$PROJECT_DIR$" />
@@ -76,6 +83,10 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Batch.BuildWasn" />
+      <item itemvalue="Go Build.go build main.go" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build main.go" />

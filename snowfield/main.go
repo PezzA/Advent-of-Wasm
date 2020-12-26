@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/pezza/advent-of-wasm/wasm"
 	"math/rand"
+	"sort"
 	"strconv"
 	"syscall/js"
 	"fmt"
@@ -16,9 +17,34 @@ type flake struct {
 }
 
 var doc wasm.JsDoc
+var canvas wasm.JsCanvas
+var currentTime float64
 var flakes []flake
+var canvasDrawWidth, canvasDrawHeight int
 
-var canvasDrawWidth, canvasDrawHeight = 800, 600
+
+
+func main() {
+	done := make(chan bool, 0)
+
+	doc = wasm.NewJsDoc()
+	canvasDrawWidth, canvasDrawHeight = doc.GetWindowSize()
+
+	canvasDrawWidth = canvasDrawWidth / 3
+	canvasDrawHeight = canvasDrawHeight / 3
+
+	flakeCount := 1000
+	flakes = createFlakes(flakeCount)
+
+
+	fmt.Println(canvasDrawWidth, canvasDrawHeight)
+	canvas = doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight)
+
+	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
+	doc.StartAnimLoop(frame)
+
+	<-done
+}
 
 func createFlakes(flakeCount int) []flake {
 	flakeArray := make([]flake, flakeCount)
@@ -52,40 +78,45 @@ func createFlakes(flakeCount int) []flake {
 		flakeArray[index].style = style
 	}
 
+	sort.Slice(flakeArray, func(i, j int) bool {
+		return flakeArray[i].speed < flakeArray[j].speed
+	})
+
+
 	return flakeArray
 }
 
-func main() {
-	done := make(chan bool, 0)
-
-	doc = wasm.NewJsDoc("canv")
-
-	doc.AddEventListener("flakecount", "input", js.FuncOf(countHandlerfunc))
-
-	flakeCount := 1000
-
-	flakes = createFlakes(flakeCount)
-
-	doc.StartAnimLoop(frame)
-
-	<-done
-}
-
-var currentTime float64
 
 func frame(now float64) {
 
 	delta := now - currentTime
 	currentTime = now
-	doc.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
+	canvas.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
+
+	prevStyle :=""
 	for i := range flakes {
-		doc.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed-1, flakes[i].speed-1, flakes[i].style)
-		flakes[i].y += int(float64(flakes[i].speed) * (delta / 20))
+
+		if prevStyle != flakes[i].style {
+			canvas.SetFillStyle(flakes[i].style)
+			prevStyle = flakes[i].style
+		}
+
+		canvas.DrawFilledRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed-1)
+
+		yUpdate := int(float64(flakes[i].speed) * (delta / 30))
+
+		if yUpdate < 1 {
+			yUpdate = 1
+		}
+		flakes[i].y +=yUpdate
 		if flakes[i].y > canvasDrawHeight {
 			flakes[i].y -= canvasDrawHeight
 		}
 	}
+
+	canvas.DrawFrame()
 }
+
 func countHandlerfunc(this js.Value, args []js.Value) interface{} {
 	newFlakeCount, err := strconv.Atoi(this.Get("value").String())
 
@@ -106,10 +137,6 @@ func adjustFlakes(newCount int, current []flake) []flake {
 		return current
 	}
 
-	if newCount > len(current) {
-		newflakes := createFlakes(newCount - len(current))
-		return append(current, newflakes...)
-	}
-
-	return flakes[0:newCount]
+	return createFlakes(newCount)
 }
+
