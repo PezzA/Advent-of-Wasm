@@ -54,12 +54,8 @@ func runPuzzle(this js.Value, p []js.Value) interface{} {
 
 func main (){
 	done := make(chan bool, 0)
-
 	doc := wasm.NewJsDoc()
-
-	doc.SetElementInnerHTML("starBody", getStarData())
-
 	doc.Document.Set("runPuzzle", js.FuncOf(runPuzzle))
-
+	doc.SetInnerHTMLById("starBody", getStarData())
 	<-done
 }

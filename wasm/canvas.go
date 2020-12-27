@@ -14,7 +14,15 @@ type JsCanvas struct {
 }
 
 func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int) JsCanvas {
-	canvas := d.Document.Call("getElementById", name)
+	var canvas js.Value
+	canvas = d.Document.Call("getElementById", name)
+
+	if canvas.IsNull() {
+		canvas = d.Document.Call("createElement", "canvas")
+		canvas.Set("id", name)
+		d.Document.Get("body").Call("appendChild", canvas)
+	}
+
 	ctx := canvas.Call("getContext", "2d", "{ alpha: false }")
 
 	var secondaryCanvas = d.Document.Call("createElement", "canvas")
