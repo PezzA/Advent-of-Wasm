@@ -4,7 +4,7 @@
     <title>Advent of Wasm</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Source+Code+Pro:300&display=swap" rel="stylesheet">
     <style>
-        #canv {
+        canvas {
             position: fixed;
             left: 0;
             top: 0;
@@ -86,7 +86,7 @@
 <body>
 <div>
     <h1>Advent of Code</h1>
-    <div class="flavour">
+    <div class="flavour" style="display: none">
             <pre>
 go obligatorySnowEffect(<label>flakes:</label><input id="flakecount" type="range" min="10" max="5000"> <span id="flakecount-value"></span>)
 
@@ -128,6 +128,7 @@ if err != nil {
 
 <script src="wasm_exec.js"></script>
 <script>
+    /*
     const snowfield = new Go();
     let snowMod, snowInst;
 
@@ -137,6 +138,7 @@ if err != nil {
         await snowfield.run(snowInst)
     });
 
+     */
     const aoc = new Go();
     let aocMod, aocInst;
 
