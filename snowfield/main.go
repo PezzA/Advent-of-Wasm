@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/pezza/advent-of-wasm/wasm"
 	"strconv"
 	"syscall/js"
+
+	"github.com/pezza/advent-of-wasm/wasm"
 )
 
 var doc wasm.JsDoc
-var canvas wasm.JsCanvas
+var canvas *wasm.JsCanvas
 var currentTime float64
 
 var canvasDrawWidth, canvasDrawHeight int

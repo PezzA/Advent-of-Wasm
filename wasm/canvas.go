@@ -16,7 +16,7 @@ type JsCanvas struct {
 	doubleBuffered bool
 }
 
-func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, doubleBuffer bool, addToDom bool, cartesian bool) JsCanvas {
+func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, doubleBuffer bool, addToDom bool, cartesian bool) *JsCanvas {
 	var canvas, canvas2, ctx, ctx2 js.Value
 	canvas = d.Document.Call("getElementById", name)
 
@@ -50,7 +50,7 @@ func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, do
 		}
 	}
 
-	return JsCanvas{
+	return &JsCanvas{
 		Canvas:         canvas,
 		Canvas2:        canvas2,
 		Context:        ctx,

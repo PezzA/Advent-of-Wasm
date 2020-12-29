@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="Merge branch 'master' of https://github.com/pezza/advent-of-wasm">
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aoc/general.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/aoc.wasm" afterDir="false" />
@@ -26,6 +24,11 @@
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../../../../Go" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1ly1SlM6cLaI9Rp4UJMsZi1CRgt" />
@@ -107,12 +110,17 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="start of viz for 2020 day 24" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/aoc/main.go</url>
-          <line>8</line>
+          <line>9</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

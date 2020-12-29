@@ -2,42 +2,41 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 
 	"github.com/pezza/advent-of-code/common"
 	"github.com/pezza/advent-of-wasm/wasm"
 )
 
-var currentTime float64
-
 func getHex(size int) []common.Point {
 	return []common.Point{
-		{X: 1 * size, Y: 0 * size},
-		{X: 3 * size, Y: 0 * size},
+		{X: size, Y: 0},
+		{X: 3 * size, Y: 0},
 		{X: 4 * size, Y: 2 * size},
 		{X: 3 * size, Y: 4 * size},
-		{X: 1 * size, Y: 4 * size},
-		{X: 0 * size, Y: 2 * size},
-		{X: 1 * size, Y: size * 0},
+		{X: size, Y: 4 * size},
+		{X: 0, Y: 2 * size},
+		{X: size, Y: 0},
 	}
 }
 
-func createHexBackGroundLayer(width, height, size int) (wasm.JsCanvas, int, int) {
+func createHexBackGroundLayer(c config) (*wasm.JsCanvas, int, int) {
 	doc := wasm.NewJsDoc()
-	canvas := doc.GetOrCreateCanvas("hexBackGround", width, height, false, false, true)
+	canvas := doc.GetOrCreateCanvas("hexBackGround", c.canvasWidth, c.canvasHeight, false, true, true)
 
 	canvas.SetFont("14pt Arial")
 	canvas.SetTextAlign(wasm.TextAlignCenter)
 	canvas.SetTextBaseLine(wasm.TextBaseLineMiddle)
-	hex := getHex(size)
+	hex := getHex(c.hexSize)
 
 	canvas.SetStrokeStyle("white")
 
-	hexTileWidth := 4 * size
-	halfWidth := 2 * size
+	hexTileWidth := 4 * c.hexSize
+	halfWidth := 2 * c.hexSize
 	threeQuarterWidth := (hexTileWidth / 4) * 3
 
-	xCells := (width / threeQuarterWidth) + 4
-	yCells := height / threeQuarterWidth
+	xCells := (c.canvasWidth / threeQuarterWidth) + 4
+	yCells := c.canvasHeight / threeQuarterWidth
 
 	xCellsHalf, yCellsHalf := xCells/2, yCells/2
 
@@ -61,15 +60,33 @@ func createHexBackGroundLayer(width, height, size int) (wasm.JsCanvas, int, int)
 	return canvas, xCells, yCells
 }
 
+type tile struct {
+	common.Point
+	margin int
+	color  color.RGBA
+}
+type state struct {
+	tiles       []tile
+	currentTime float64
+}
+
+type config struct {
+	hexSize      int
+	canvasWidth  int
+	canvasHeight int
+}
+
 func main() {
 	done := make(chan bool, 0)
 	doc := wasm.NewJsDoc()
 
 	canvasDrawWidth, canvasDrawHeight := doc.GetWindowSize()
 
-	size := 10
+	config := config{
+		10, canvasDrawWidth, canvasDrawHeight,
+	}
 
-	hexDrop, _, _ := createHexBackGroundLayer(canvasDrawWidth, canvasDrawHeight, size)
+	hexDrop, _, _ := createHexBackGroundLayer(config)
 
 	drawCanvas := doc.GetOrCreateCanvas(
 		"drawCanvas",
@@ -98,13 +115,22 @@ func main() {
 	drawCanvas.SetTextAlign(wasm.TextAlignCenter)
 	drawCanvas.SetTextBaseLine(wasm.TextBaseLineMiddle)
 
-	var s state
-	doc.StartAnimLoop(func(now float64) {
-		delta := now - currentTime
-		currentTime = now
+	layers := make(map[string]*wasm.JsCanvas, 0)
 
-		draw(delta, drawCanvas, hexDrop, uiCanvas, s, canvasDrawWidth, canvasDrawHeight)
-		s = update(delta, s)
+	layers["ui"] = uiCanvas
+	layers["draw"] = drawCanvas
+	layers["background"] = hexDrop
+
+	state := state{
+		tiles: make([]tile, 0),
+	}
+
+	doc.StartAnimLoop(func(now float64) {
+		delta := now - state.currentTime
+		state.currentTime = now
+
+		draw(delta, layers, config, state)
+		state = update(delta, state)
 	})
 
 	<-done
@@ -115,19 +141,22 @@ func update(delta float64, s state) state {
 	return s
 }
 
-func draw(delta float64, drawCanvas wasm.JsCanvas, hexDrop wasm.JsCanvas, uiCanvas wasm.JsCanvas, s state, width int, height int) {
-	drawCanvas.ClearFrame(0, 0, width, height)
-	drawCanvas.DrawCanvas(hexDrop, 0, 0)
-	drawCanvas.DrawBufferedFrame()
+func draw(delta float64, layers map[string]*wasm.JsCanvas, c config, s state) {
+	layers["draw"].ClearFrame(0, 0, c.canvasWidth, c.canvasHeight)
+	//layers["draw"].DrawCanvas(*layers["background"], 0, 0)
+	layers["draw"].DrawBufferedFrame()
 
-	uiCanvas.ClearFrame(0, 0, width, height)
-	uiCanvas.DrawText(fmt.Sprintf("Delta: %v", int(delta)), 50, 50, true)
-	uiCanvas.DrawBufferedFrame()
+	layers["ui"].ClearFrame(0, 0, c.canvasWidth, c.canvasHeight)
+	layers["ui"].DrawText(fmt.Sprintf("Delta: %v", int(delta)), 50, 50, true)
+	layers["ui"].DrawBufferedFrame()
 }
 
-type state struct {
-	Current      []common.Point
-	OpeningTiles []common.Point
+// hexColor returns an HTML hex-representation of c. The alpha channel is dropped
+// and precision is truncated to 8 bits per channel
+// https://www.reddit.com/r/golang/comments/adm6l5/do_i_really_need_a_third_party_library_to_get_hex/edibj7a?utm_source=share&utm_medium=web2x&context=3
+func hexColor(c color.Color) string {
+	rgba := color.RGBAModel.Convert(c).(color.RGBA)
+	return fmt.Sprintf("#%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B)
 }
 
 func getCanvasPoint(p common.Point, margin int, size int) common.Point {
