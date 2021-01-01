@@ -7,22 +7,19 @@ import (
 )
 
 type JsCanvas struct {
-	Canvas         js.Value
-	Canvas2        js.Value
-	Context        js.Value
-	Context2       js.Value
-	width          int
-	height         int
-	doubleBuffered bool
+	Canvas    js.Value
+	Context   js.Value
+	width     int
+	height    int
+	cartesian bool
 }
 
-func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, doubleBuffer bool, addToDom bool, cartesian bool) *JsCanvas {
-	var canvas, canvas2, ctx, ctx2 js.Value
+func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, addToDom bool, cartesian bool) *JsCanvas {
+	var canvas, ctx js.Value
 	canvas = d.Document.Call("getElementById", name)
 
 	if canvas.IsNull() {
-		canvas = d.Document.Call("createElement", "canvas")
-		canvas.Set("id", name)
+		canvas = d.CreateElement("canvas", name)
 
 		if addToDom {
 			d.Document.Get("body").Call("appendChild", canvas)
@@ -33,126 +30,88 @@ func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, do
 
 	ctx = canvas.Call("getContext", "2d", "{ alpha: false }")
 
-	if cartesian && !doubleBuffer {
+	if cartesian {
 		ctx.Call("translate", drawWidth/2, drawHeight/2)
 	}
 
-	if doubleBuffer {
-		canvas2 = d.Document.Call("createElement", "canvas")
-		canvas2.Set("id", name+"2")
-		canvas2.Set("width", drawWidth)
-		canvas2.Set("height", drawHeight)
-
-		ctx2 = canvas2.Call("getContext", "2d", "{ alpha: false }")
-
-		if cartesian {
-			ctx2.Call("translate", drawWidth/2, drawHeight/2)
-		}
-	}
-
 	return &JsCanvas{
-		Canvas:         canvas,
-		Canvas2:        canvas2,
-		Context:        ctx,
-		Context2:       ctx2,
-		width:          drawWidth,
-		height:         drawHeight,
-		doubleBuffered: doubleBuffer,
+		Canvas:    canvas,
+		Context:   ctx,
+		width:     drawWidth,
+		height:    drawHeight,
+		cartesian: cartesian,
 	}
 }
 
-// ClearFrame will draw a clear frame of the entire canvas
-func (c *JsCanvas) ClearFrame(x, y, w, h int) {
-	if c.doubleBuffered {
-		c.Context2.Call("clearRect", x, y, w, h)
-	}
-
+func (c *JsCanvas) ClearArea(x, y, w, h int) {
 	c.Context.Call("clearRect", x, y, w, h)
 }
 
-func (c *JsCanvas) getDrawContext() js.Value {
-	if c.doubleBuffered {
-		return c.Context2
+func (c *JsCanvas) Clear() {
+	x, y := 0, 0
+
+	if c.cartesian {
+		x, y = -c.width/2, -c.height/2
 	}
-	return c.Context
+
+	c.Context.Call("clearRect", x, y, c.width, c.height)
 }
 
 func (c *JsCanvas) LineWidth(width int) {
-	c.getDrawContext().Set("lineWidth", width)
+	c.Context.Set("lineWidth", width)
 }
 
 func (c *JsCanvas) SetFillStyle(style string) {
-	c.getDrawContext().Set("fillStyle", style)
+	c.Context.Set("fillStyle", style)
 }
 
 func (c *JsCanvas) SetStrokeStyle(style string) {
-	c.getDrawContext().Set("strokeStyle", style)
+	c.Context.Set("strokeStyle", style)
 }
 
-// DrawRect draws a filled rectangle to the canvas
-func (c *JsCanvas) DrawFilledRect(x, y, w, h int) {
-	c.getDrawContext().Call("fillRect", x, y, w, h)
+func (c *JsCanvas) DrawRect(x, y, w, h int, fill bool) {
+	if fill {
+		c.Context.Call("fillRect", x, y, w, h)
+	} else {
+		c.Context.Call("strokeRect", x, y, w, h)
+	}
 }
 
 func (c *JsCanvas) DrawPolyLine(start common.Point, points []common.Point, fill bool) {
-	c.getDrawContext().Call("beginPath")
-	c.getDrawContext().Call("moveTo", start.X+points[0].X, start.Y+points[0].Y)
+	c.Context.Call("beginPath")
+	c.Context.Call("moveTo", start.X+points[0].X, start.Y+points[0].Y)
 
 	for i := 0; i < len(points); i++ {
-		c.getDrawContext().Call("lineTo", points[i].X+start.X, points[i].Y+start.Y)
+		c.Context.Call("lineTo", points[i].X+start.X, points[i].Y+start.Y)
 	}
 
 	if fill {
-		c.getDrawContext().Call("fill")
+		c.Context.Call("fill")
 	} else {
-		c.getDrawContext().Call("stroke")
+		c.Context.Call("stroke")
 	}
 }
 
 func (c *JsCanvas) SetFont(font string) {
-	c.getDrawContext().Set("font", font)
+	c.Context.Set("font", font)
 }
-
-type TextAlign string
-
-const (
-	TextAlignStart  TextAlign = "start"
-	TextAlignEnd    TextAlign = "end"
-	TextAlignLeft   TextAlign = "left"
-	TextAlignRight  TextAlign = "right"
-	TextAlignCenter TextAlign = "center"
-)
 
 func (c *JsCanvas) SetTextAlign(alignment TextAlign) {
-	c.getDrawContext().Set("textAlign", string(alignment))
+	c.Context.Set("textAlign", string(alignment))
 }
 
-type TextBaseLine string
-
-const (
-	TextBaseLineTop        TextBaseLine = "top"
-	TextBaseLineBottom     TextBaseLine = "bottom"
-	TextBaseLineMiddle     TextBaseLine = "middle"
-	TextBaseLineAlphabetic TextBaseLine = "alphabetic"
-	TextBaseLineHanging    TextBaseLine = "hanging"
-)
-
 func (c *JsCanvas) SetTextBaseLine(baseline TextBaseLine) {
-	c.getDrawContext().Set("textBaseline", string(baseline))
+	c.Context.Set("textBaseline", string(baseline))
 }
 
 func (c *JsCanvas) DrawText(text string, x int, y int, fill bool) {
 	if fill {
-		c.getDrawContext().Call("fillText", text, x, y)
+		c.Context.Call("fillText", text, x, y)
 	} else {
-		c.getDrawContext().Call("strokeText", text, x, y)
+		c.Context.Call("strokeText", text, x, y)
 	}
 }
 
-func (c *JsCanvas) DrawCanvas(t JsCanvas, x int, y int) {
+func (c *JsCanvas) CopyCanvas(t JsCanvas, x int, y int) {
 	c.Context.Call("drawImage", t.Canvas, x, y)
-}
-
-func (c *JsCanvas) DrawBufferedFrame() {
-	c.Context.Call("drawImage", c.Canvas2, 0, 0)
 }

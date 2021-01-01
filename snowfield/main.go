@@ -33,7 +33,7 @@ func main() {
 	canvasDrawHeight = canvasDrawHeight / 3
 
 	flakes = createFlakes(flakeCount, canvasDrawWidth, canvasDrawHeight)
-	canvas = doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight, true, true, false)
+	canvas = doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight, true, false)
 
 	doc.AddEventListener(flakeCountSlider, "input", js.FuncOf(countHandlerFunc))
 	doc.StartAnimLoop(frame)
@@ -54,7 +54,7 @@ func update(delta float64) {
 }
 
 func draw(delta float64) {
-	canvas.ClearFrame(0, 0, canvasDrawWidth, canvasDrawHeight)
+	canvas.Clear()
 
 	prevStyle := ""
 	for i := range flakes {
@@ -62,10 +62,8 @@ func draw(delta float64) {
 			canvas.SetFillStyle(flakes[i].style)
 			prevStyle = flakes[i].style
 		}
-		canvas.DrawFilledRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed-1)
+		canvas.DrawRect(flakes[i].x, flakes[i].y, flakes[i].speed, flakes[i].speed-1, true)
 	}
-
-	canvas.DrawBufferedFrame()
 }
 
 func countHandlerFunc(this js.Value, args []js.Value) interface{} {

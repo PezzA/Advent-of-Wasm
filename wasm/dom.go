@@ -3,7 +3,7 @@ package wasm
 import "syscall/js"
 
 type JsDoc struct {
-	Document   js.Value
+	Document js.Value
 }
 
 var frameCallback func(now float64)
@@ -54,6 +54,26 @@ func (d *JsDoc) SetInnerHTML(element js.Value, html string) {
 	element.Set("innerHTML", html)
 }
 
+func (d *JsDoc) AddClass(element js.Value, className string) {
+	classList := element.Get("classList")
+	classList.Call("add", className)
+}
+
+func (d *JsDoc) RemoveClass(element js.Value, className string) {
+	classList := element.Get("classList")
+	classList.Call("remove", className)
+}
+
 func (d *JsDoc) GetElementByID(elementID string) js.Value {
 	return d.Document.Call("getElementById", elementID)
+}
+
+func (d *JsDoc) CreateElement(tagName string, id string) js.Value {
+	elem := d.Document.Call("createElement", tagName)
+
+	if id != "" {
+		elem.Set("id", id)
+	}
+
+	return elem
 }

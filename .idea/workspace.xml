@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="Merge branch 'master' of https://github.com/pezza/advent-of-wasm">
+    <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="removed global state">
+      <change afterPath="$PROJECT_DIR$/docs/lobby-layout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/wasm/consts.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/aoc.wasm" afterDir="false" />
@@ -9,6 +11,7 @@
       <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wasm/canvas.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/dom.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -38,6 +42,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -113,14 +118,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="start of viz for 2020 day 24" />
     <MESSAGE value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
+    <MESSAGE value="removed global state" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed global state" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/aoc/main.go</url>
-          <line>9</line>
+          <line>10</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

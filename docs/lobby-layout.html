@@ -66,7 +66,7 @@
         }
 
         table {
-           width: 100%;
+            width: 100%;
             color: #33AA00;
             font-size: 18px;
         }
@@ -76,14 +76,12 @@
         }
 
         a {
-            color: #CCCCCC;
-            text-shadow: 0 0 5px #fff;
+            color: #aaaaaa;
             text-decoration: none;
         }
 
         a:hover {
-            color: #FFFFFF;
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF, 0 0 40px #FFFFFF;
+            color: #007700;
         }
 
         .star {
@@ -96,13 +94,14 @@
             color: #ffff66;
             font-weight: bolder;
             text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffff66, 0 0 40px #ffff66;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 <div>
     <h1>Advent of Code</h1>
-    <div class="flavour" >
+    <div class="flavour" style="display: none">
             <pre>
 go obligatorySnowEffect(<label for="flakecount">flakes:</label><input id="flakecount" type="range" min="10" max="5000"> <span id="flakecount-value"></span>)
 
@@ -111,7 +110,7 @@ joke, err := GetJoke([]string {
     "Not a creature was stirring, not even a mouse;"
     "",
     "Except up-far-to-early <a href="https://github.com/PezzA">John</a>, coding at 5am,",
-    "Bashing out <a href="https://github.com/PezzA/advent-of-code">solutions</a> in <a href="https://golang.org/">go</a>, using embedded <a href="https://github.com/PezzA/advent-of-wasm">wa-sm</a>.",
+    "Bashing out <a href="https://github.com/PezzA/advent-of-code">solutions</a> in <a href="https://golang.org/">go</a>, using embedded <a href="https://github.com/PezzA/advent-of-wasm">wa-sem'</a>.",
 })
 
 if err != nil {
@@ -121,21 +120,30 @@ if err != nil {
 <- ideas
             </pre>
 
+        <table>
+            <thead>
+            <tr>
+                <td></td>
+                <td>2015</td>
+                <td>2016</td>
+                <td>2017</td>
+                <td>2018</td>
+                <td>2019</td>
+                <td>2020</td>
+            </tr>
+            </thead>
+            <tbody id="starBody">
 
-        <pre>
-<strong>Visualisations!</strong>
-<span>2020 - Day 24 - <span class="star completed">*</span> <a href="lobby-layout.html">Lobby Layout</a></span>
-
-        </pre>
-
+            </tbody>
+        </table>
     </div>
 
 </div>
 
-
+<div style="display: fi"></div>
 <script src="wasm_exec.js"></script>
 <script>
-
+    /*
     const snowfield = new Go();
     let snowMod, snowInst;
 
@@ -145,6 +153,15 @@ if err != nil {
         await snowfield.run(snowInst)
     });
 
+     */
+    const aoc = new Go();
+    let aocMod, aocInst;
+
+    WebAssembly.instantiateStreaming(fetch("aoc.wasm"), aoc.importObject).then(async (result) => {
+        aocMod = result.module;
+        aocInst = result.instance;
+        await aoc.run(aocInst)
+    });
 </script>
 <script>
     function doPuzzle( day, year) {
