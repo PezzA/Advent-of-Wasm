@@ -1,5 +1,5 @@
 body {
-    background-color: aliceblue;
+    background-color: #CCCCCC;
 }
 
 canvas {
@@ -28,6 +28,12 @@ canvas {
 
 
 article {
-    background: rgb(255,255,255,0.8);
-    padding:40px;
+    background: rgb(255,255,255, 0.9);
+    padding:10px;
+    margin:0;
+}
+
+.code-section {
+    background-color: #0f0f23;
+    color:#00cc00;
 }

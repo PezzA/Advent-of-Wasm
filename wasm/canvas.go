@@ -69,7 +69,15 @@ func (c *JsCanvas) SetStrokeStyle(style string) {
 	c.Context.Set("strokeStyle", style)
 }
 
-func (c *JsCanvas) DrawRect(x, y, w, h int, fill bool) {
+func (c *JsCanvas) DrawRect(x, y, w, h float64, fill bool) {
+	if fill {
+		c.Context.Call("fillRect", x, y, w, h)
+	} else {
+		c.Context.Call("strokeRect", x, y, w, h)
+	}
+}
+
+func (c *JsCanvas) DrawRectInt(x, y, w, h int, fill bool) {
 	if fill {
 		c.Context.Call("fillRect", x, y, w, h)
 	} else {
