@@ -3,157 +3,11 @@
     <meta charset="utf-8"/>
     <title>Advent of Wasm</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Source+Code+Pro:300&display=swap" rel="stylesheet">
-    <style>
-        canvas {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .control-panel {
-            position: fixed;
-            left:30px;
-            top:70px;
-            min-width:300px;
-            min-height:500px;
-            border: 1px solid black;
-            border-radius: 20px;
-            color: #009900;
-            background: rgba(15, 15, 35, 0.8);
-            text-align: left;
-            padding-left:20px;
-            padding-right:20px;
-        }
-
-        body {
-            font-family: "Source Code Pro", monospace;
-            font-size: 14pt;
-            background-color: #cccccc;
-            margin:0;
-            padding:0;
-        }
-
-        .flavour {
-            text-align: left;
-            margin: auto;
-            background: rgba(15, 15, 35, 0.8);
-            padding: 10px 10px 10px 10px;
-            width: 40%;
-            min-width: 700px;
-            border: 1px solid black;
-            border-radius: 20px;
-        }
-
-        .flavour pre {
-            color: #009900;
-            display: inline-block;
-            text-align: left;
-        }
-
-
-        h1 {
-            font-family: Lobster,sans-serif;
-            font-size: 72px;
-            color: #ffff66;
-            text-shadow: 0 0 50px #FFFFFF;
-        }
-
-        div {
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            color: #33AA00;
-            font-size: 18px;
-        }
-
-        td {
-            padding-right: 10px
-        }
-
-        a {
-            color: #aaaaaa;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #007700;
-        }
-
-        .star {
-            color: #777777;
-            font-weight: bold;
-            font-size:20px;
-        }
-
-        .star.completed {
-            color: #ffff66;
-            font-weight: bolder;
-            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffff66, 0 0 40px #ffff66;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="main.css"/>
 </head>
 <body>
-<div>
-    <h1>Advent of Code</h1>
-    <div class="flavour" style="display: none">
-            <pre>
-go obligatorySnowEffect(<label for="flakecount">flakes:</label><input id="flakecount" type="range" min="10" max="5000"> <span id="flakecount-value"></span>)
-
-joke, err := GetJoke([]string {
-    "'Twas the month before Christmas, when all through the house",
-    "Not a creature was stirring, not even a mouse;"
-    "",
-    "Except up-far-to-early <a href="https://github.com/PezzA">John</a>, coding at 5am,",
-    "Bashing out <a href="https://github.com/PezzA/advent-of-code">solutions</a> in <a href="https://golang.org/">go</a>, using embedded <a href="https://github.com/PezzA/advent-of-wasm">wa-sem'</a>.",
-})
-
-if err != nil {
-    log.fatal(err)
-}
-
-<- ideas
-            </pre>
-
-        <table>
-            <thead>
-            <tr>
-                <td></td>
-                <td>2015</td>
-                <td>2016</td>
-                <td>2017</td>
-                <td>2018</td>
-                <td>2019</td>
-                <td>2020</td>
-            </tr>
-            </thead>
-            <tbody id="starBody">
-
-            </tbody>
-        </table>
-    </div>
-
-</div>
-
-<div style="display: fi"></div>
 <script src="wasm_exec.js"></script>
 <script>
-    /*
-    const snowfield = new Go();
-    let snowMod, snowInst;
-
-    WebAssembly.instantiateStreaming(fetch("snowfield.wasm"), snowfield.importObject).then(async (result) => {
-        snowMod = result.module;
-        snowInst = result.instance;
-        await snowfield.run(snowInst)
-    });
-
-     */
     const aoc = new Go();
     let aocMod, aocInst;
 
@@ -163,12 +17,5 @@ if err != nil {
         await aoc.run(aocInst)
     });
 </script>
-<script>
-    function doPuzzle( day, year) {
-        runPuzzle( day, year)
-        return false;
-    }
-</script>
 </body>
-
 </html>

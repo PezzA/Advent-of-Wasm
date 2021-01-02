@@ -271,8 +271,14 @@ func update(delta float64, s state, c config) state {
 func draw(delta float64, layers map[string]*wasm.JsCanvas, c config, s state) {
 	layers["draw"].Clear()
 
+	tColor := color.RGBA{}
 	for _, tile := range s.tiles {
-		layers["draw"].SetFillStyle(hexColor(tile.color))
+
+		if tile.color != tColor {
+			layers["draw"].SetFillStyle(hexColor(tile.color))
+			tColor = tile.color
+		}
+
 		layers["draw"].DrawPolyLine(getCanvasPoint(tile.Point, tile.margin, c.hexSize), getHex(c.hexSize-tile.margin), true)
 	}
 

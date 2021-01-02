@@ -3,139 +3,41 @@
     <meta charset="utf-8"/>
     <title>Advent of Wasm</title>
     <link href="https://fonts.googleapis.com/css?family=Lobster|Source+Code+Pro:300&display=swap" rel="stylesheet">
-    <style>
-        canvas {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .control-panel {
-            position: fixed;
-            left:30px;
-            top:70px;
-            min-width:300px;
-            min-height:500px;
-            border: 1px solid black;
-            border-radius: 20px;
-            color: #009900;
-            background: rgba(15, 15, 35, 0.8);
-            text-align: left;
-            padding-left:20px;
-            padding-right:20px;
-        }
-
-        body {
-            font-family: "Source Code Pro", monospace;
-            font-size: 14pt;
-            background-color: #cccccc;
-            margin:0;
-            padding:0;
-        }
-
-        .flavour {
-            text-align: left;
-            margin: auto;
-            background: rgba(15, 15, 35, 0.8);
-            padding: 10px 10px 10px 10px;
-            width: 40%;
-            min-width: 700px;
-            border: 1px solid black;
-            border-radius: 20px;
-        }
-
-        .flavour pre {
-            color: #009900;
-            display: inline-block;
-            text-align: left;
-        }
-
-
-        h1 {
-            font-family: Lobster,sans-serif;
-            font-size: 72px;
-            color: #ffff66;
-            text-shadow: 0 0 50px #FFFFFF;
-        }
-
-        div {
-            text-align: center;
-        }
-
-        table {
-           width: 100%;
-            color: #33AA00;
-            font-size: 18px;
-        }
-
-        td {
-            padding-right: 10px
-        }
-
-        a {
-            color: #CCCCCC;
-            text-shadow: 0 0 5px #fff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #FFFFFF;
-            text-shadow: 0 0 10px #FFFFFF, 0 0 20px #FFFFFF, 0 0 30px #FFFFFF, 0 0 40px #FFFFFF;
-        }
-
-        .star {
-            color: #777777;
-            font-weight: bold;
-            font-size:20px;
-        }
-
-        .star.completed {
-            color: #ffff66;
-            font-weight: bolder;
-            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ffff66, 0 0 40px #ffff66;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css"/>
 </head>
 <body>
-<div>
-    <h1>Advent of Code</h1>
-    <div class="flavour" >
-            <pre>
-go obligatorySnowEffect(<label for="flakecount">flakes:</label><input id="flakecount" type="range" min="10" max="5000"> <span id="flakecount-value"></span>)
 
-joke, err := GetJoke([]string {
-    "'Twas the month before Christmas, when all through the house",
-    "Not a creature was stirring, not even a mouse;"
-    "",
-    "Except up-far-to-early <a href="https://github.com/PezzA">John</a>, coding at 5am,",
-    "Bashing out <a href="https://github.com/PezzA/advent-of-code">solutions</a> in <a href="https://golang.org/">go</a>, using embedded <a href="https://github.com/PezzA/advent-of-wasm">wa-sm</a>.",
-})
+<div class="container">
+    <header>
+        <h1>Advent of Code : 2015 - 2020</h1>
+        <h3>John Perrin</h3>
+    </header>
 
-if err != nil {
-    log.fatal(err)
-}
+    <article class="ms-1">
+    <pre class="lead">go obligatorySnowEffect(<label for="flakecount">flakes:</label><input id="flakecount" type="range" min="10" max="5000"><span id="flakecount-value"></span>)
+<- ideas</pre>
 
-<- ideas
-            </pre>
+<h3>Welcome to my advent of code landing page!</h3>
+        <p>This contains links to my <a href="https://adventofcode.com/">https://adventofcode.com/</a> content.  This is split into 2 main repos.  <a href="https://github.com/PezzA/advent-of-wasm">Advent of Code</a>, which contains solutions, and a CLI interface for all the puzzles I have solved so far, and <a href="https://github.com/PezzA/advent-of-wasm">Advent of WASM</a> (which this page is a part of).</p>
+
+        <p>My language of choice for advent of code is <a href="https://golang.org/">Go</a>.  I like Go for it's simplicity and opinionated approach, however, there are times when you really rub up against it's 'Just write a for loop ... for everything' approach.  What you might get for free in other languages, Reverse, Contains, Map etc.. You pretty much write each time in Go, with the added kicker of no generics support.  It does keep it all tight to be fair, but sometimes if your not expecting to have to have to write something so ubiquitous, it yanks you out of your mental model and can be inhibiting. </p>
+
+        <h3>Visualisation List</h3>
+
+        <h4>2020 Day 24: <a href="lobby-layout.html">Lobby Layout</a></h4>
+
+        <p>This is a hex grid puzzle.  Part one involves following a series of directions on a hex grid and flipping the end tile othello/reversi style.  Part two then involves
+        a 'game of life' cellular automata which grows the end result of part one over 100 iterations. </p>
 
 
-        <pre>
-<strong>Visualisations!</strong>
-<span>2020 - Day 24 - <span class="star completed">*</span> <a href="lobby-layout.html">Lobby Layout</a></span>
+    </article>
 
-        </pre>
-
-    </div>
 
 </div>
 
-
 <script src="wasm_exec.js"></script>
 <script>
-
     const snowfield = new Go();
     let snowMod, snowInst;
 
@@ -146,12 +48,5 @@ if err != nil {
     });
 
 </script>
-<script>
-    function doPuzzle( day, year) {
-        runPuzzle( day, year)
-        return false;
-    }
-</script>
 </body>
-
 </html>
