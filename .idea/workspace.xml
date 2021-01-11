@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="removed global state">
-      <change afterPath="$PROJECT_DIR$/aoc/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/buildwasm.bat" beforeDir="false" afterPath="$PROJECT_DIR$/buildwasm.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/dom.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/snowfield/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/model.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +68,7 @@
       <recent name="C:\Users\Dad\go\src\github.com\pezza\advent-of-wasm\snowfield" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.Build AOC">
+  <component name="RunManager" selected="Go Build.Build SnowField">
     <configuration name="BuildWasn" type="BatchConfigurationType" factoryName="Batch">
       <module name="advent-of-wasm" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -96,6 +94,22 @@
       <option name="run" value="false" />
       <method v="2" />
     </configuration>
+    <configuration name="Build SnowField" type="GoApplicationRunConfiguration" factoryName="Go Application" activateToolWindowBeforeRun="false">
+      <module name="advent-of-wasm" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-o ..\docs\snowfield.wasm" />
+      <envs>
+        <env name="GOARCH" value="wasm" />
+        <env name="GOOS" value="js" />
+      </envs>
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/snowfield/main.go|$PROJECT_DIR$/snowfield/model.go" />
+      <package value="github.com/pezza/advent-of-wasm" />
+      <directory value="$PROJECT_DIR$" />
+      <output_directory value="$PROJECT_DIR$/docs" />
+      <option name="run" value="false" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="advent-of-wasm" />
       <working_directory value="$PROJECT_DIR$" />
@@ -108,6 +122,7 @@
     <list>
       <item itemvalue="Batch.BuildWasn" />
       <item itemvalue="Go Build.Build AOC" />
+      <item itemvalue="Go Build.Build SnowField" />
       <item itemvalue="Go Build.go build main.go" />
     </list>
     <recent_temporary>
@@ -136,7 +151,8 @@
     <MESSAGE value="start of viz for 2020 day 24" />
     <MESSAGE value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
     <MESSAGE value="removed global state" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed global state" />
+    <MESSAGE value="fixed long delta time issue, added speed slider, updated to append and truncate flake array rather than regenerate on each change." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed long delta time issue, added speed slider, updated to append and truncate flake array rather than regenerate on each change." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -9,31 +9,31 @@ type flake struct {
 	x            float64
 	y            float64
 	size         float64
+	drawSize     float64
 	style        string
 	fallTime     float64
 	fallDuration float64
+	origIndex    int
 }
 
 type snowField []flake
 
 var flakes snowField
 
-func (sf snowField) update(delta float64, drawHeight int) {
-
+func (sf snowField) update(delta float64, drawHeight int, speed float64) {
 	floatHeight := float64(drawHeight)
 	for i := range sf {
-		sf[i] = sf[i].update(delta, floatHeight)
+		sf[i] = sf[i].update(delta, floatHeight, speed)
 	}
 }
 
-func (f flake) update(delta float64, drawHeight float64) flake {
-	f.fallDuration += delta * 2
+func (f flake) update(delta float64, drawHeight float64, speed float64) flake {
+	f.fallDuration += delta * speed
 	f.y = f.fallDuration / f.fallTime
 	if f.y > drawHeight {
 		f.y -= drawHeight
 		f.fallDuration = 0
 	}
-
 	return f
 }
 
@@ -71,19 +71,40 @@ func createFlakes(flakeCount int, drawWidth int, drawHeight int) snowField {
 		flakeArray[index].fallTime = (fallSpeed * 1000) / float64(drawHeight)
 		flakeArray[index].fallDuration = rand.Float64() * fallSpeed * float64(drawHeight)
 		flakeArray[index].style = style
+		flakeArray[index].drawSize = speed * 2
+		flakeArray[index].origIndex = index
 	}
-
-	sort.Slice(flakeArray, func(i, j int) bool {
-		return flakeArray[i].size < flakeArray[j].size
-	})
 
 	return flakeArray
 }
 
-func (sf snowField) adjustFlakes(newCount int, drawWidth int, drawHeight int) snowField {
-	if newCount == len(sf) {
-		return sf
+func adjustFlakes(newCount int, current snowField, drawWidth int, drawHeight int) snowField {
+	if newCount == len(current) {
+		return current
 	}
 
-	return createFlakes(newCount, drawWidth, drawHeight)
+	sort.Slice(current, func(i, j int) bool {
+		return current[i].origIndex < current[j].origIndex
+	})
+
+	if newCount > len(current) {
+		newFlakesArray := createFlakes(newCount-len(current), drawWidth, drawHeight)
+		current = append(current, newFlakesArray...)
+		for i := range current {
+			current[i].origIndex = i
+		}
+
+		sort.Slice(current, func(i, j int) bool {
+			return current[i].style < current[j].style
+		})
+
+		return current
+	}
+
+	current = current[0:newCount]
+	sort.Slice(current, func(i, j int) bool {
+		return current[i].style < current[j].style
+	})
+
+	return current
 }
