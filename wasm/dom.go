@@ -3,12 +3,9 @@ package wasm
 import "syscall/js"
 
 type JsDoc struct {
-	Document js.Value
+	Document    js.Value
+	animationID js.Value
 }
-
-var frameCallback func(now float64)
-
-var renderFrameEvt js.Func
 
 func NewJsDoc() JsDoc {
 	doc := js.Global().Get("document")
@@ -19,15 +16,19 @@ func NewJsDoc() JsDoc {
 }
 
 func (d *JsDoc) StartAnimLoop(frame func(now float64)) {
-	frameCallback = frame
-	renderFrameEvt = js.FuncOf(renderFrame)
-	js.Global().Call("requestAnimationFrame", renderFrameEvt)
+	var renderFrameEvent js.Func
+
+	renderFrameEvent = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		frame(args[0].Float())
+		d.animationID = js.Global().Call("requestAnimationFrame", renderFrameEvent)
+		return nil
+	})
+
+	d.animationID = js.Global().Call("requestAnimationFrame", renderFrameEvent)
 }
 
-func renderFrame(this js.Value, args []js.Value) interface{} {
-	frameCallback(args[0].Float())
-	js.Global().Call("requestAnimationFrame", renderFrameEvt)
-	return nil
+func (d *JsDoc) CancelAnimLoop() {
+	js.Global().Call("cancelAnimationFrame", d.animationID)
 }
 
 func (d *JsDoc) AddEventListener(element js.Value, event string, handlerFunc js.Func) js.Value {

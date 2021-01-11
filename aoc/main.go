@@ -63,45 +63,27 @@ func createHexBackGroundLayer(c config) (*wasm.JsCanvas, int, int) {
 	return canvas, xCells, yCells
 }
 
-type tile struct {
-	common.Point
-	margin  int
-	color   color.RGBA
-	remove  bool
-	endTile bool
-}
-
-const animTickPoll = 20
-const stateTickPoll = 80
-
-type state struct {
-	tiles       []tile
-	currentTime float64
-	animTick    float64
-	stateTick   float64
-	insIndex    int
-	subInsIndex int
-	running     bool
-}
-
-func getNewState(running bool) state {
-	return state{
-		tiles:       make([]tile, 0),
-		animTick:    0,
-		stateTick:   0,
-		currentTime: 0,
-		insIndex:    0,
-		subInsIndex: 0,
-		running:     running,
-	}
-}
-
 type config struct {
-	hexSize      int
-	canvasWidth  int
-	canvasHeight int
-	hex          []common.Point
-	insList      [][]string
+	animTickPoll   float64
+	stateTickPoll  float64
+	state2TickPoll float64
+	hexSize        int
+	canvasWidth    int
+	canvasHeight   int
+	hex            []common.Point
+	routeList      [][]common.Point
+	insList        [][]string
+	hexHalfSize    int
+	hexThreeQSize  int
+	hexFullSize    int
+}
+
+func (c *config) setSizes(size int) {
+	c.hexSize = size
+	c.hexHalfSize = size * 2
+	c.hexThreeQSize = size * 3
+	c.hexFullSize = size * 4
+	c.hex = getHex(size)
 }
 
 func main() {
@@ -118,6 +100,12 @@ func main() {
 	partOneButton := doc.CreateElement("button", "")
 	doc.SetInnerHTML(partOneButton, "Part One")
 
+	partTwoButton := doc.CreateElement("button", "")
+	doc.SetInnerHTML(partTwoButton, "Part Two")
+
+	stopButton := doc.CreateElement("button", "")
+	doc.SetInnerHTML(stopButton, "StopAnimation")
+
 	doc.Document.Get("body").Call("appendChild", div)
 
 	panelTitle := doc.CreateElement("h2", "")
@@ -125,14 +113,25 @@ func main() {
 
 	div.Call("appendChild", panelTitle)
 	div.Call("appendChild", partOneButton)
+	div.Call("appendChild", partTwoButton)
+	div.Call("appendChild", stopButton)
 
-	size := 8
 	config := config{
-		size,
-		canvasDrawWidth,
-		canvasDrawHeight,
-		getHex(size),
-		Day202024.GetData(Day202024.Entry.PuzzleInput()),
+		animTickPoll:   animTickPoll,
+		stateTickPoll:  stateTickPoll,
+		state2TickPoll: state2TickPoll,
+		canvasWidth:    canvasDrawWidth,
+		canvasHeight:   canvasDrawHeight,
+
+		insList: Day202024.GetData(Day202024.Entry.PuzzleInput()),
+	}
+
+	config.setSizes(part1HexSize)
+
+	config.routeList = make([][]common.Point, len(config.insList))
+
+	for i := range config.insList {
+		config.routeList[i] = Day202024.GetMoveList(config.insList[i])
 	}
 
 	hexDrop, _, _ := createHexBackGroundLayer(config)
@@ -157,7 +156,7 @@ func main() {
 	uiCanvas.SetFont("18px Consolas")
 
 	drawCanvas.SetFillStyle("red")
-	drawCanvas.SetStrokeStyle("red")
+	drawCanvas.SetStrokeStyle("blue")
 	drawCanvas.SetFont("10pt Arial")
 	drawCanvas.SetTextAlign(wasm.TextAlignCenter)
 	drawCanvas.SetTextBaseLine(wasm.TextBaseLineMiddle)
@@ -168,25 +167,52 @@ func main() {
 	layers["draw"] = drawCanvas
 	layers["background"] = hexDrop
 
-	state := getNewState(false)
+	state := getNewState(false, 1)
 
-	doc.StartAnimLoop(func(now float64) {
+	frameFunc := func(now float64) {
 		delta := now - state.currentTime
 		state.currentTime = now
-
 		draw(delta, layers, config, state)
 		state = update(delta, state, config)
-	})
+	}
+
+	doc.AddEventListener(stopButton, "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+
+		if state.paused {
+			doc.SetInnerHTML(stopButton, "Pause Animation")
+			doc.StartAnimLoop(frameFunc)
+		} else {
+			doc.SetInnerHTML(stopButton, "Resume Animation")
+			doc.CancelAnimLoop()
+		}
+
+		state.paused = !state.paused
+		return false
+	}))
 
 	doc.AddEventListener(partOneButton, "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		state = getNewState(true)
+		doc.CancelAnimLoop()
+		state = getNewState(true, 1)
+		config.setSizes(part1HexSize)
+		layers["background"], _, _ = createHexBackGroundLayer(config)
+		doc.StartAnimLoop(frameFunc)
+		return false
+	}))
+
+	doc.AddEventListener(partTwoButton, "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		doc.CancelAnimLoop()
+		state = getNewState(true, 2)
+		config.setSizes(part2HexSize)
+		//layers["background"], _, _ = createHexBackGroundLayer(config)
+		state.Floor.FlipAllTiles(Day202024.GetData(Day202024.Entry.PuzzleInput()))
+		doc.StartAnimLoop(frameFunc)
+
 		return false
 	}))
 	<-done
 }
 
 func update(delta float64, s state, c config) state {
-
 	if !s.running {
 		return s
 	}
@@ -194,96 +220,145 @@ func update(delta float64, s state, c config) state {
 	s.animTick += delta
 	s.stateTick += delta
 
+	if s.puzzlePart == 2 && s.stateTick > c.state2TickPoll && s.automataIteration <= s.maxIteration {
+		s.stateTick = 0
+		s.Floor = s.Floor.Automata()
+		s.automataIteration++
+		return s
+	}
+
+	// if there is going to be no update, return current state
+	if s.animTick < c.animTickPoll && s.stateTick < c.stateTickPoll {
+		return s
+	}
+
 	newTiles := make([]tile, 0)
+	newEndTiles := make([]tile, 0)
 
 	// update any existing tiles
-
-	stateUpdate := false
-	if s.animTick > animTickPoll || s.stateTick > stateTickPoll {
+	if s.animTick > c.animTickPoll || s.stateTick > c.stateTickPoll {
 		s.animTick = 0
-		stateUpdate = true
 
 		for i := range s.tiles {
-			if !s.tiles[i].endTile {
-				if s.tiles[i].margin < c.hexSize {
-					s.tiles[i].margin++
-				}
-				if s.tiles[i].margin < c.hexSize {
-					newTiles = append(newTiles, s.tiles[i])
-				}
-			} else {
+			if s.tiles[i].margin < c.hexSize {
+				s.tiles[i].margin++
 				newTiles = append(newTiles, s.tiles[i])
 			}
 		}
 	}
 
 	// see if we have some new ones to add.
-	if s.stateTick > stateTickPoll {
+	if s.puzzlePart == 1 && s.stateTick > c.stateTickPoll {
 		s.stateTick = 0
-		stateUpdate = true
 
-		if s.insIndex < len(c.insList) {
-			tilesToAdd := Day202024.GetMoveList(c.insList[s.insIndex])
+		// do part on update
+		if s.puzzlePart == 1 {
+			var t tile
 
-			r, g, b := uint8(0), uint8(0), uint8(0)
-
-			if s.insIndex%3 == 0 {
-				r = 255
-			}
-
-			if s.insIndex%3 == 1 {
-				g = 255
-			}
-
-			if s.insIndex%3 == 2 {
-				b = 255
-			}
-
-			for index, move := range tilesToAdd {
-				endTile := index == len(tilesToAdd)-1
-
-				newCol := color.RGBA{R: r, G: g, B: b}
-				margin := 0
-				if endTile {
-					newCol = color.RGBA{B: 0}
-					margin = 0
+			for i := 0; i < tilesToAdd; i++ {
+				if s.running {
+					s, t = getNextTile(s, c)
+					if t.endTile {
+						newEndTiles = append(newEndTiles, t)
+					} else {
+						newTiles = append(newTiles, t)
+					}
 				}
-
-				newTiles = append(newTiles, tile{
-					Point:   common.AxialToOffset(move),
-					remove:  false,
-					endTile: endTile,
-					margin:  margin,
-					color:   newCol,
-				})
 			}
-
-			s.insIndex++
 		}
 	}
 
-	if stateUpdate {
-		s.tiles = newTiles
-	}
+	s.tiles = newTiles
+
 	return s
+}
+
+func getNextTile(s state, c config) (state, tile) {
+	var t tile
+	endTile := false
+
+	// inc route counter, when at end, inc route list counter
+	s.subInsIndex++
+	if s.subInsIndex == len(c.routeList[s.insIndex])-1 {
+		endTile = true
+		s.Floor.FlipTile(c.insList[s.insIndex])
+	}
+
+	if !endTile {
+		t = tile{
+			Point:   common.AxialToOffset(c.routeList[s.insIndex][s.subInsIndex]),
+			endTile: endTile,
+		}
+	}
+
+	if endTile {
+		s.subInsIndex = 0
+		s.insIndex++
+
+		if s.insIndex == len(c.routeList) {
+			s.running = false
+		}
+	}
+
+	return s, t
 }
 
 func draw(delta float64, layers map[string]*wasm.JsCanvas, c config, s state) {
 	layers["draw"].Clear()
 
-	tColor := color.RGBA{}
-	for _, tile := range s.tiles {
-
-		if tile.color != tColor {
-			layers["draw"].SetFillStyle(hexColor(tile.color))
-			tColor = tile.color
-		}
-
-		layers["draw"].DrawPolyLine(getCanvasPoint(tile.Point, tile.margin, c.hexSize), getHex(c.hexSize-tile.margin), true)
+	if s.puzzlePart == 1 {
+		layers["draw"].SetFillStyle("#000000")
 	}
 
-	layers["ui"].Clear()
-	layers["ui"].DrawText(fmt.Sprintf("Delta: %v", int(delta)), 50, 50, true)
+	if s.puzzlePart == 2 {
+		layers["draw"].SetFillStyle("#FFFFFF")
+		layers["draw"].DrawRectInt(-c.canvasWidth/2, -c.canvasHeight/2, c.canvasWidth, c.canvasHeight, true)
+	}
+
+	for k, v := range s.Floor {
+		if s.puzzlePart == 2 {
+			if v > 0 {
+				if v == 1 || v == 2 {
+					layers["draw"].SetFillStyle("#dddddd")
+				}
+
+				if v == 3 || v == 4 {
+					layers["draw"].SetFillStyle("#bbbbbb")
+				}
+
+				if v == 5 || v == 6 {
+					layers["draw"].SetFillStyle("#999999")
+				}
+
+				if v == 7 || v == 8 {
+					layers["draw"].SetFillStyle("#777777")
+				}
+
+				if v == 9 || v == 10 {
+					layers["draw"].SetFillStyle("#555555")
+				}
+
+				if v == 11 || v == 12 {
+					layers["draw"].SetFillStyle("#333333")
+				}
+
+				if v > 12 {
+					layers["draw"].SetFillStyle("#000000")
+				}
+			}
+		}
+		layers["draw"].DrawPolyLine(getCanvasPoint(common.AxialToOffset(k), 0, c), c.hex, true)
+
+	}
+
+	if s.puzzlePart == 1 {
+		for _, tile := range s.tiles {
+			layers["draw"].DrawPolyLine(getCanvasPoint(tile.Point, tile.margin, c), getHex(c.hexSize-tile.margin), false)
+		}
+	}
+
+	//layers["ui"].Clear()
+	//layers["ui"].DrawText(fmt.Sprintf("Delta: %v", int(delta)), 50, 50, true)
 }
 
 // hexColor returns an HTML hex-representation of c. The alpha channel is dropped
@@ -294,20 +369,19 @@ func hexColor(c color.Color) string {
 	return fmt.Sprintf("#%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B)
 }
 
-func getCanvasPoint(p common.Point, margin int, size int) common.Point {
-	hexTileWidth := 4 * size
-
-	threeQuarterWidth := (hexTileWidth / 4) * 3
-
+func getCanvasPoint(p common.Point, margin int, c config) common.Point {
 	canvasPoint := common.Point{
-		X: p.X * threeQuarterWidth,
-		Y: p.Y * hexTileWidth,
+		X: p.X * c.hexThreeQSize,
+		Y: p.Y * c.hexFullSize,
 	}
 
 	if p.X%2 == 0 {
-		canvasPoint.Y += size * 2
+		canvasPoint.Y += c.hexHalfSize
 	}
 
+	if margin == 0 {
+		return canvasPoint
+	}
 	canvasPoint.X += 2 * margin
 	canvasPoint.Y += 2 * margin
 
