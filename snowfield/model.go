@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"image/color"
 	"math/rand"
 	"sort"
 )
@@ -10,7 +12,7 @@ type flake struct {
 	y            float64
 	size         float64
 	drawSize     float64
-	style        string
+	col          color.RGBA
 	fallTime     float64
 	fallDuration float64
 	origIndex    int
@@ -38,6 +40,7 @@ func (f flake) update(delta float64, drawHeight float64, speed float64) flake {
 }
 
 func createFlakes(flakeCount int, drawWidth int, drawHeight int) snowField {
+	fmt.Println(drawWidth, drawHeight)
 	flakeArray := make(snowField, flakeCount)
 
 	for index := range flakeArray {
@@ -47,31 +50,28 @@ func createFlakes(flakeCount int, drawWidth int, drawHeight int) snowField {
 		fallSpeed := float64(0)
 		flakeArray[index].size = speed
 
-		style := "#666666"
-
 		switch speed {
 		case 1:
-			style = "#00FF00"
+			flakeArray[index].col = color.RGBA{R: 255}
 		case 2:
 			fallSpeed = 12 + rand.Float64()*(2)
-			style = "#888888"
+			flakeArray[index].col = color.RGBA{R: 136, G: 136, B: 136}
 		case 3:
 			fallSpeed = 10 + rand.Float64()*(2)
-			style = "#BBBBBB"
+			flakeArray[index].col = color.RGBA{R: 187, G: 187, B: 187}
 		case 4:
 			fallSpeed = 8 + rand.Float64()*(2)
-			style = "#DDDDDD"
+			flakeArray[index].col = color.RGBA{R: 221, G: 221, B: 221}
 		case 5:
 			fallSpeed = 6 + rand.Float64()*(2)
-			style = "#EEEEEE"
+			flakeArray[index].col = color.RGBA{R: 238, G: 238, B: 238}
 		case 6:
 			fallSpeed = 4 + rand.Float64()*(2)
-			style = "#FFFFFF"
+			flakeArray[index].col = color.RGBA{R: 255, G: 255, B: 255}
 		}
 		flakeArray[index].fallTime = (fallSpeed * 1000) / float64(drawHeight)
 		flakeArray[index].fallDuration = rand.Float64() * fallSpeed * float64(drawHeight)
-		flakeArray[index].style = style
-		flakeArray[index].drawSize = speed * 2
+		flakeArray[index].drawSize = speed
 		flakeArray[index].origIndex = index
 	}
 
@@ -95,7 +95,7 @@ func adjustFlakes(newCount int, current snowField, drawWidth int, drawHeight int
 		}
 
 		sort.Slice(current, func(i, j int) bool {
-			return current[i].style < current[j].style
+			return current[i].size < current[j].size
 		})
 
 		return current
@@ -103,7 +103,7 @@ func adjustFlakes(newCount int, current snowField, drawWidth int, drawHeight int
 
 	current = current[0:newCount]
 	sort.Slice(current, func(i, j int) bool {
-		return current[i].style < current[j].style
+		return current[i].size < current[j].size
 	})
 
 	return current

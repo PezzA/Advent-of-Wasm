@@ -32,6 +32,9 @@ func main() {
 
 	canvasDrawWidth, canvasDrawHeight := doc.GetWindowSize()
 
+	canvasDrawWidth, canvasDrawHeight = canvasDrawWidth/2, canvasDrawHeight/2
+
+	fmt.Println(canvasDrawWidth, canvasDrawHeight)
 	flakes = adjustFlakes(flakeCount, make(snowField, 0), canvasDrawWidth, canvasDrawHeight)
 	canvas := doc.GetOrCreateCanvas("canv", canvasDrawWidth, canvasDrawHeight, true, false)
 
@@ -71,13 +74,30 @@ func update(delta float64, canvasDrawHeight int, speed float64) {
 }
 
 func draw(delta float64, canvas *wasm.JsCanvas) {
-	canvas.Clear()
-	prevStyle := ""
+	frame := canvas.GetBlankBytes()
 	for i := range flakes {
-		if prevStyle != flakes[i].style {
-			canvas.SetFillStyle(flakes[i].style)
-			prevStyle = flakes[i].style
+		for x := float64(0); x < flakes[i].drawSize; x++ {
+			fx := int(flakes[i].x + x)
+
+			if fx >= canvas.Width {
+				break
+			}
+
+			for y := float64(0); y < flakes[i].drawSize; y++ {
+				fy := int(flakes[i].y + y)
+				if fy >= canvas.Height {
+					break
+				}
+
+				pix := 4 * (fy*canvas.Width + fx)
+
+				frame[pix] = flakes[i].col.R
+				frame[pix+1] = flakes[i].col.G
+				frame[pix+2] = flakes[i].col.B
+				frame[pix+3] = 255
+			}
 		}
-		canvas.DrawRect(flakes[i].x, flakes[i].y, flakes[i].drawSize, flakes[i].drawSize, true)
 	}
+
+	canvas.PutImageData(frame)
 }

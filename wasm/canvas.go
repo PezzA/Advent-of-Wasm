@@ -9,8 +9,8 @@ import (
 type JsCanvas struct {
 	Canvas    js.Value
 	Context   js.Value
-	width     int
-	height    int
+	Width     int
+	Height    int
 	cartesian bool
 }
 
@@ -37,10 +37,21 @@ func (d *JsDoc) GetOrCreateCanvas(name string, drawWidth int, drawHeight int, ad
 	return &JsCanvas{
 		Canvas:    canvas,
 		Context:   ctx,
-		width:     drawWidth,
-		height:    drawHeight,
+		Width:     drawWidth,
+		Height:    drawHeight,
 		cartesian: cartesian,
 	}
+}
+
+func (c *JsCanvas) GetImageData() []byte {
+	jsImageData := c.Context.Call("getImageData", 0, 0, c.Width, c.Height)
+	imageData := make([]byte, jsImageData.Get("height").Int()*jsImageData.Get("width").Int()*4)
+	_ = js.CopyBytesToGo(imageData, jsImageData.Get("data"))
+	return imageData
+}
+
+func (c *JsCanvas) GetBlankBytes() []byte {
+	return make([]byte, c.Width*c.Height*4)
 }
 
 func (c *JsCanvas) ClearArea(x, y, w, h int) {
@@ -51,10 +62,10 @@ func (c *JsCanvas) Clear() {
 	x, y := 0, 0
 
 	if c.cartesian {
-		x, y = -c.width/2, -c.height/2
+		x, y = -c.Width/2, -c.Height/2
 	}
 
-	c.Context.Call("clearRect", x, y, c.width, c.height)
+	c.Context.Call("clearRect", x, y, c.Width, c.Height)
 }
 
 func (c *JsCanvas) LineWidth(width int) {
@@ -67,6 +78,13 @@ func (c *JsCanvas) SetFillStyle(style string) {
 
 func (c *JsCanvas) SetStrokeStyle(style string) {
 	c.Context.Set("strokeStyle", style)
+}
+
+func (c *JsCanvas) PutImageData(data []byte) {
+	dst := js.Global().Get("Uint8ClampedArray").New(len(data))
+	_ = js.CopyBytesToJS(dst, data)
+	id := js.Global().Get("ImageData").New(dst, c.Width, c.Height)
+	c.Context.Call("putImageData", id, 0, 0)
 }
 
 func (c *JsCanvas) DrawRect(x, y, w, h float64, fill bool) {
