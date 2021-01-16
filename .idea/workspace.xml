@@ -7,7 +7,6 @@
       <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/canvas.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +152,8 @@
     <MESSAGE value="Merge branch 'master' of https://github.com/pezza/advent-of-wasm" />
     <MESSAGE value="removed global state" />
     <MESSAGE value="fixed long delta time issue, added speed slider, updated to append and truncate flake array rather than regenerate on each change." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed long delta time issue, added speed slider, updated to append and truncate flake array rather than regenerate on each change." />
+    <MESSAGE value="Updated to use pixel rendering.  Bit of an artefact generating snow, only happens in the top half" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to use pixel rendering.  Bit of an artefact generating snow, only happens in the top half" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

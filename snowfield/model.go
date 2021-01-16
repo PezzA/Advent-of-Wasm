@@ -71,7 +71,7 @@ func createFlakes(flakeCount int, drawWidth int, drawHeight int) snowField {
 		}
 		flakeArray[index].fallTime = (fallSpeed * 1000) / float64(drawHeight)
 		flakeArray[index].fallDuration = rand.Float64() * fallSpeed * float64(drawHeight)
-		flakeArray[index].drawSize = speed
+		flakeArray[index].drawSize = speed * 2
 		flakeArray[index].origIndex = index
 	}
 

@@ -24,15 +24,13 @@ func main() {
 	flakeSpeedSlider := doc.GetElementByID("flakespeed")
 	flakeSpeedLabel := doc.GetElementByID("flakespeed-value")
 
-	flakeCount := 500
+	flakeCount := 1000
 	flakeSpeed := float64(2)
 
 	doc.SetInnerHTML(flakeCountLabel, strconv.Itoa(flakeCount))
 	doc.SetInnerHTML(flakeSpeedLabel, fmt.Sprintf("%.2f", flakeSpeed))
 
 	canvasDrawWidth, canvasDrawHeight := doc.GetWindowSize()
-
-	canvasDrawWidth, canvasDrawHeight = canvasDrawWidth/2, canvasDrawHeight/2
 
 	fmt.Println(canvasDrawWidth, canvasDrawHeight)
 	flakes = adjustFlakes(flakeCount, make(snowField, 0), canvasDrawWidth, canvasDrawHeight)
@@ -76,6 +74,7 @@ func update(delta float64, canvasDrawHeight int, speed float64) {
 func draw(delta float64, canvas *wasm.JsCanvas) {
 	frame := canvas.GetBlankBytes()
 	for i := range flakes {
+
 		for x := float64(0); x < flakes[i].drawSize; x++ {
 			fx := int(flakes[i].x + x)
 
@@ -85,12 +84,12 @@ func draw(delta float64, canvas *wasm.JsCanvas) {
 
 			for y := float64(0); y < flakes[i].drawSize; y++ {
 				fy := int(flakes[i].y + y)
+
 				if fy >= canvas.Height {
 					break
 				}
 
 				pix := 4 * (fy*canvas.Width + fx)
-
 				frame[pix] = flakes[i].col.R
 				frame[pix+1] = flakes[i].col.G
 				frame[pix+2] = flakes[i].col.B
