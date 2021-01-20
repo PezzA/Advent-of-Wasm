@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="removed global state">
+      <change afterPath="$PROJECT_DIR$/aoc/state.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aoc/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aoc/general.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/snowfield/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/canvas.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/dom.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/window.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/window.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +49,7 @@
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../advent-of-ebiten" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pixelImageExtractor" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -153,7 +157,8 @@
     <MESSAGE value="removed global state" />
     <MESSAGE value="fixed long delta time issue, added speed slider, updated to append and truncate flake array rather than regenerate on each change." />
     <MESSAGE value="Updated to use pixel rendering.  Bit of an artefact generating snow, only happens in the top half" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated to use pixel rendering.  Bit of an artefact generating snow, only happens in the top half" />
+    <MESSAGE value="some minor updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="some minor updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

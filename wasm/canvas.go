@@ -130,7 +130,7 @@ func (c *JsCanvas) SetTextBaseLine(baseline TextBaseLine) {
 	c.Context.Set("textBaseline", string(baseline))
 }
 
-func (c *JsCanvas) DrawText(text string, x int, y int, fill bool) {
+func (c *JsCanvas) DrawTextOnly(text string, x int, y int, fill bool) {
 	if fill {
 		c.Context.Call("fillText", text, x, y)
 	} else {
@@ -138,6 +138,28 @@ func (c *JsCanvas) DrawText(text string, x int, y int, fill bool) {
 	}
 }
 
+func (c *JsCanvas) DrawText(text string, x int, y int, fill bool, font string, style string, align TextAlign, base TextBaseLine) {
+	c.SetFont(font)
+	c.SetTextAlign(align)
+	c.SetTextBaseLine(base)
+
+	if fill {
+		c.SetFillStyle(style)
+		c.Context.Call("fillText", text, x, y)
+	} else {
+		c.SetStrokeStyle(style)
+		c.Context.Call("strokeText", text, x, y)
+	}
+}
+
 func (c *JsCanvas) CopyCanvas(t JsCanvas, x int, y int) {
 	c.Context.Call("drawImage", t.Canvas, x, y)
+}
+
+func (c *JsCanvas) SetGlobalAlpha(alpha float64) {
+	c.Context.Set("globalAlpha", alpha)
+}
+
+func (c *JsCanvas) DrawImage(img js.Value, sX, sY, sW, sH, dX, dY, dW, dH int) {
+	c.Context.Call("drawImage", img, sX, sY, sW, sH, dX, dY, dW, dH)
 }

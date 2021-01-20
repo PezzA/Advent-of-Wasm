@@ -8,53 +8,47 @@ import (
 // size of grid
 const part1HexSize = 8
 const part2HexSize = 2
-
-// animation speed
-const animTickPoll = float64(10)
-
-// how often to update state
-const stateTickPoll = float64(20)
-
-const state2TickPoll = float64(20)
-
 const tilesToAdd = 15
 
-type state struct {
-	tiles             []tile
-	currentTime       float64
-	animTick          float64
-	stateTick         float64
-	insIndex          int
-	subInsIndex       int
-	running           bool
-	paused            bool
-	puzzlePart        int
-	automataIteration int
-	maxIteration      int
-	lastLen           int
-	Day202024.Floor
+type config struct {
+	animTickPoll   float64
+	stateTickPoll  float64
+	state2TickPoll float64
+	hexSize        int
+	canvasWidth    int
+	canvasHeight   int
+	hex            []common.Point
+	routeList      [][]common.Point
+	insList        [][]string
+	hexHalfSize    int
+	hexThreeQSize  int
+	hexFullSize    int
 }
 
-func getNewState(running bool, puzzlePart int) state {
-	return state{
-		tiles:             make([]tile, 0),
-		animTick:          0,
-		stateTick:         0,
-		currentTime:       0,
-		insIndex:          0,
-		subInsIndex:       0,
-		running:           running,
-		paused:            false,
-		puzzlePart:        puzzlePart,
-		automataIteration: 0,
-		maxIteration:      100,
-		lastLen:           0,
-		Floor:             make(Day202024.Floor, 0),
+func getNewConfig(w, h, size int) config {
+	c := config{
+		animTickPoll:   float64(10),
+		stateTickPoll:  float64(20),
+		state2TickPoll: float64(20),
+		canvasWidth:    w,
+		canvasHeight:   h,
+		insList:        Day202024.GetData(Day202024.Entry.PuzzleInput())}
+
+	c.routeList = make([][]common.Point, len(c.insList))
+
+	for i := range c.insList {
+		c.routeList[i] = Day202024.GetMoveList(c.insList[i])
 	}
+
+	c.setSizes(size)
+
+	return c
 }
 
-type tile struct {
-	common.Point
-	margin  int
-	endTile bool
+func (c *config) setSizes(size int) {
+	c.hexSize = size
+	c.hexHalfSize = size * 2
+	c.hexThreeQSize = size * 3
+	c.hexFullSize = size * 4
+	c.hex = getHex(size)
 }

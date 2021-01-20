@@ -63,29 +63,6 @@ func createHexBackGroundLayer(c config) (*wasm.JsCanvas, int, int) {
 	return canvas, xCells, yCells
 }
 
-type config struct {
-	animTickPoll   float64
-	stateTickPoll  float64
-	state2TickPoll float64
-	hexSize        int
-	canvasWidth    int
-	canvasHeight   int
-	hex            []common.Point
-	routeList      [][]common.Point
-	insList        [][]string
-	hexHalfSize    int
-	hexThreeQSize  int
-	hexFullSize    int
-}
-
-func (c *config) setSizes(size int) {
-	c.hexSize = size
-	c.hexHalfSize = size * 2
-	c.hexThreeQSize = size * 3
-	c.hexFullSize = size * 4
-	c.hex = getHex(size)
-}
-
 func main() {
 	done := make(chan bool, 0)
 	doc := wasm.NewJsDoc()
@@ -116,45 +93,11 @@ func main() {
 	div.Call("appendChild", partTwoButton)
 	div.Call("appendChild", stopButton)
 
-	config := config{
-		animTickPoll:   animTickPoll,
-		stateTickPoll:  stateTickPoll,
-		state2TickPoll: state2TickPoll,
-		canvasWidth:    canvasDrawWidth,
-		canvasHeight:   canvasDrawHeight,
-
-		insList: Day202024.GetData(Day202024.Entry.PuzzleInput()),
-	}
-
-	config.setSizes(part1HexSize)
-
-	config.routeList = make([][]common.Point, len(config.insList))
-
-	for i := range config.insList {
-		config.routeList[i] = Day202024.GetMoveList(config.insList[i])
-	}
+	config := getNewConfig(canvasDrawWidth, canvasDrawHeight, part1HexSize)
 
 	hexDrop, _, _ := createHexBackGroundLayer(config)
 
-	drawCanvas := doc.GetOrCreateCanvas(
-		"drawCanvas",
-		canvasDrawWidth,
-		canvasDrawHeight,
-		true,
-		true,
-	)
-
-	uiCanvas := doc.GetOrCreateCanvas(
-		"uiCanvas",
-		canvasDrawWidth,
-		canvasDrawHeight,
-		true,
-		false,
-	)
-
-	uiCanvas.SetFillStyle("blue")
-	uiCanvas.SetFont("18px Consolas")
-
+	drawCanvas := doc.GetOrCreateCanvas("drawCanvas", canvasDrawWidth, canvasDrawHeight, true, true)
 	drawCanvas.SetFillStyle("red")
 	drawCanvas.SetStrokeStyle("blue")
 	drawCanvas.SetFont("10pt Arial")
@@ -162,8 +105,6 @@ func main() {
 	drawCanvas.SetTextBaseLine(wasm.TextBaseLineMiddle)
 
 	layers := make(map[string]*wasm.JsCanvas, 0)
-
-	layers["ui"] = uiCanvas
 	layers["draw"] = drawCanvas
 	layers["background"] = hexDrop
 
@@ -177,7 +118,6 @@ func main() {
 	}
 
 	doc.AddEventListener(stopButton, "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-
 		if state.paused {
 			doc.SetInnerHTML(stopButton, "Pause Animation")
 			doc.StartAnimLoop(frameFunc)
@@ -356,9 +296,6 @@ func draw(delta float64, layers map[string]*wasm.JsCanvas, c config, s state) {
 			layers["draw"].DrawPolyLine(getCanvasPoint(tile.Point, tile.margin, c), getHex(c.hexSize-tile.margin), false)
 		}
 	}
-
-	//layers["ui"].Clear()
-	//layers["ui"].DrawText(fmt.Sprintf("Delta: %v", int(delta)), 50, 50, true)
 }
 
 // hexColor returns an HTML hex-representation of c. The alpha channel is dropped

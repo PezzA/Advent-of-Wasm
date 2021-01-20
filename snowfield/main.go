@@ -68,7 +68,6 @@ func main() {
 
 func update(delta float64, canvasDrawHeight int, speed float64) {
 	flakes.update(delta, canvasDrawHeight, speed)
-
 }
 
 func draw(delta float64, canvas *wasm.JsCanvas) {

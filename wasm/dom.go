@@ -78,3 +78,5 @@ func (d *JsDoc) CreateElement(tagName string, id string) js.Value {
 
 	return elem
 }
+
+
