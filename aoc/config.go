@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/pezza/advent-of-code/2020/Day202024"
 	"github.com/pezza/advent-of-code/common"
+	"github.com/pezza/wasm"
 )
 
 // size of grid
@@ -17,7 +18,7 @@ type config struct {
 	hexSize        int
 	canvasWidth    int
 	canvasHeight   int
-	hex            []common.Point
+	hex            []wasm.Point
 	routeList      [][]common.Point
 	insList        [][]string
 	hexHalfSize    int

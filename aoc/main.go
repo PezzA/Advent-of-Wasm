@@ -5,14 +5,19 @@ import (
 	"image/color"
 	"syscall/js"
 
+	"github.com/pezza/wasm"
+
 	"github.com/pezza/advent-of-code/2020/Day202024"
 
 	"github.com/pezza/advent-of-code/common"
-	"github.com/pezza/advent-of-wasm/wasm"
 )
 
-func getHex(size int) []common.Point {
-	return []common.Point{
+func toWasm(p common.Point) wasm.Point {
+	return wasm.Point{p.X, p.Y}
+}
+
+func getHex(size int) []wasm.Point {
+	return []wasm.Point{
 		{X: size, Y: 0},
 		{X: 3 * size, Y: 0},
 		{X: 4 * size, Y: 2 * size},
@@ -23,7 +28,7 @@ func getHex(size int) []common.Point {
 	}
 }
 
-func createHexBackGroundLayer(c config) (*wasm.JsCanvas, int, int) {
+func (c config) createHexBackGroundLayer() (*wasm.JsCanvas, int, int) {
 	doc := wasm.NewJsDoc()
 	canvas := doc.GetOrCreateCanvas("hexBackGround", c.canvasWidth, c.canvasHeight, true, true)
 
@@ -45,9 +50,9 @@ func createHexBackGroundLayer(c config) (*wasm.JsCanvas, int, int) {
 
 	for x := -xCellsHalf; x < xCellsHalf; x++ {
 		for y := -yCellsHalf; y < yCellsHalf; y++ {
-			plotPoint := common.Point{X: x, Y: y}
+			plotPoint := wasm.Point{X: x, Y: y}
 
-			canvasPoint := common.Point{
+			canvasPoint := wasm.Point{
 				X: plotPoint.X * threeQuarterWidth,
 				Y: plotPoint.Y * hexTileWidth,
 			}
@@ -95,7 +100,7 @@ func main() {
 
 	config := getNewConfig(canvasDrawWidth, canvasDrawHeight, part1HexSize)
 
-	hexDrop, _, _ := createHexBackGroundLayer(config)
+	hexDrop, _, _ := config.createHexBackGroundLayer()
 
 	drawCanvas := doc.GetOrCreateCanvas("drawCanvas", canvasDrawWidth, canvasDrawHeight, true, true)
 	drawCanvas.SetFillStyle("red")
@@ -134,7 +139,7 @@ func main() {
 		doc.CancelAnimLoop()
 		state = getNewState(true, 1)
 		config.setSizes(part1HexSize)
-		layers["background"], _, _ = createHexBackGroundLayer(config)
+		layers["background"], _, _ = config.createHexBackGroundLayer()
 		doc.StartAnimLoop(frameFunc)
 		return false
 	}))
@@ -287,13 +292,13 @@ func draw(delta float64, layers map[string]*wasm.JsCanvas, c config, s state) {
 				}
 			}
 		}
-		layers["draw"].DrawPolyLine(getCanvasPoint(common.AxialToOffset(k), 0, c), c.hex, true)
+		layers["draw"].DrawPolyLine(toWasm(getCanvasPoint(common.AxialToOffset(k), 0, c)), c.hex, true)
 
 	}
 
 	if s.puzzlePart == 1 {
 		for _, tile := range s.tiles {
-			layers["draw"].DrawPolyLine(getCanvasPoint(tile.Point, tile.margin, c), getHex(c.hexSize-tile.margin), false)
+			layers["draw"].DrawPolyLine(toWasm(getCanvasPoint(tile.Point, tile.margin, c)), getHex(c.hexSize-tile.margin), false)
 		}
 	}
 }

@@ -2,15 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56e0ae24-f546-423a-8036-8ac5fe741b42" name="Default Changelist" comment="removed global state">
-      <change afterPath="$PROJECT_DIR$/aoc/state.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/getwasm.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aoc/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aoc/general.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/aoc/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/aoc/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildwasm.bat" beforeDir="false" afterPath="$PROJECT_DIR$/buildwasm.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/aoc.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/aoc.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/snowfield.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/docs/snowfield.wasm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/snowfield/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/snowfield/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/canvas.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/canvas.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/dom.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/dom.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasm/window.go" beforeDir="false" afterPath="$PROJECT_DIR$/wasm/window.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/snowfield/templates.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/canvas.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/consts.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/dom.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasm/window.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +39,9 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
   <component name="ProjectId" id="1ly1SlM6cLaI9Rp4UJMsZi1CRgt" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -49,7 +56,8 @@
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pixelImageExtractor" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -160,18 +168,16 @@
     <MESSAGE value="some minor updates" />
     <option name="LAST_COMMIT_MESSAGE" value="some minor updates" />
   </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/aoc/main.go</url>
-          <line>10</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/aoc/main.go</url>
-          <line>32</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/aoc/config.go</url>
+          <line>2</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

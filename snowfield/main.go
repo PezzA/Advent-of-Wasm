@@ -7,7 +7,7 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/pezza/advent-of-wasm/wasm"
+	"github.com/pezza/wasm"
 )
 
 const frameTolerance = 100
