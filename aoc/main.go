@@ -5,11 +5,9 @@ import (
 	"image/color"
 	"syscall/js"
 
+	"github.com/pezza/advent-of-code/puzzles/2020/Day202024"
+	"github.com/pezza/advent-of-code/puzzles/common"
 	"github.com/pezza/wasm"
-
-	"github.com/pezza/advent-of-code/2020/Day202024"
-
-	"github.com/pezza/advent-of-code/common"
 )
 
 func toWasm(p common.Point) wasm.Point {
@@ -72,7 +70,7 @@ func main() {
 	done := make(chan bool, 0)
 	doc := wasm.NewJsDoc()
 
-	_, _, title := Day202024.Entry.Describe()
+	_, _, title, _ := Day202024.Entry.Describe()
 
 	canvasDrawWidth, canvasDrawHeight := doc.GetWindowSize()
 

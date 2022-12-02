@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/pezza/advent-of-code/2020/Day202024"
-	"github.com/pezza/advent-of-code/common"
+	"github.com/pezza/advent-of-code/puzzles/2020/Day202024"
+	"github.com/pezza/advent-of-code/puzzles/common"
 )
 
 type state struct {
